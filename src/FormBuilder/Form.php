@@ -59,8 +59,15 @@ class Form implements ControlParentInterface
         foreach ($this->controls as $control)
             $control->init();
 
-        if ($this->isSubmitted() && !$this->hasError())
+        foreach ($this->sections as $section)
+            foreach ($section->getControls() as $control)
+                $control->init();
+
+        if ($this->isAjaxSubmit()) {
+            $this->printJsonData();
+        } else if (!$this->hasError()) {
             $this->buttons['submit']->doAction();
+        }
 
         $this->init = true;
     }
@@ -72,14 +79,14 @@ class Form implements ControlParentInterface
 
         printf('<form method="%s" class="bsfb-form">', $this->method);
 
+        printf('<input type="hidden" name="submitted" value="%s"/>', !Util::stringIsNullOrEmpty($this->id) ? $this->id : 'true');
+
         if (count($this->sections) > 0) {
             foreach ($this->sections as $section) {
                 $section->render();
             }
         } else {
             print('<fieldset>');
-
-            printf('<input type="hidden" name="submitted" value="%s"/>', !Util::stringIsNullOrEmpty($this->id) ? $this->id : 'true');
 
             foreach ($this->controls as $control) {
                 $control->render();
@@ -170,13 +177,28 @@ class Form implements ControlParentInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isAjaxSubmit()
+    {
+        return isset($_POST['ajax_submit']) && boolval($_POST['ajax_submit']) === true;
+    }
+
+    /**
      * @return boolean
      */
     public function hasError()
     {
-        foreach ($this->controls as $control)
-            if ($control->hasError())
-                return true;
+        if (count($this->sections) > 0) {
+            foreach ($this->sections as $section)
+                foreach ($section->getControls() as $control)
+                    if ($control->hasError())
+                        return true;
+        } else {
+            foreach ($this->controls as $control)
+                if ($control->hasError())
+                    return true;
+        }
 
         return false;
     }
@@ -187,5 +209,27 @@ class Form implements ControlParentInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    private function printJsonData() {
+        $data = [];
+
+        if (count($this->sections) > 0) {
+            foreach ($this->sections as $section) {
+                foreach ($section->getControls() as $control) {
+                    if ($control->hasError())
+                        $data['errors'][$control->getName()] = $control->getErrorMessage();
+                }
+            }
+        } else {
+            foreach ($this->controls as $control) {
+                if ($control->hasError())
+                    $data['errors'][$control->getName()] = $control->getErrorMessage();
+            }
+        }
+
+        header('Content-Type: application/json');
+        print(json_encode($data));
+        exit(0);
     }
 }

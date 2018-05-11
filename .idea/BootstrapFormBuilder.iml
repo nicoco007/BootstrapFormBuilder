@@ -41,5 +41,8 @@
     <orderEntry type="library" name="@types/jquery" level="application" />
     <orderEntry type="library" name="bootstrap-datetimepicker" level="application" />
     <orderEntry type="library" name="fr" level="application" />
+    <orderEntry type="library" name="fr-ca" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="jquery.form" level="application" />
   </component>
 </module>

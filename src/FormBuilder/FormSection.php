@@ -52,6 +52,12 @@ class FormSection implements ControlParentInterface
         print('</fieldset>');
     }
 
+    public function init()
+    {
+        foreach ($this->controls as $control)
+            $control->init();
+    }
+
     /**
      * @param Controls\FormControl $control
      */
@@ -61,6 +67,11 @@ class FormSection implements ControlParentInterface
             throw new \InvalidArgumentException('Expected $control to be instance of FormControl, got ' . Util::getType($control));
 
         $this->controls[] = $control;
+    }
+
+    public function getControls()
+    {
+        return $this->controls;
     }
 
     /**

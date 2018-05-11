@@ -21,9 +21,14 @@ $(function () {
     $('.bsfb-form').each(function () {
         var $form = $(this);
 
-        /*$form.on("submit", function (event) {
+        $form.find('[type="submit"]').on('click', function () {
+            $(this).attr('clicked', 'true');
+        });
+
+        $form.on("submit", function (event) {
             event.preventDefault();
-        });*/
+            submitForm($form, event);
+        });
 
         // initialize date/time pickers
         $form.find('.datetimepicker-date').each(function () {
@@ -39,3 +44,90 @@ $(function () {
         });
     });
 });
+
+function submitForm($form, event) {
+    // disable everything
+    $form.find('fieldset, button').prop('disabled', true);
+    $form.find('a').addClass('disabled');
+    $form.find('.alert').remove();
+
+    console.log(event.relatedTarget);
+
+    var $button = $form.find('button[type="submit"][clicked=true]');
+    var $fa = $button.find('i.fa');
+    var faTemp;
+
+    $button.removeAttr('clicked');
+
+    if ($fa.length) {
+        faTemp = $fa.attr('class');
+        $fa.attr('class', 'fa fa-spinner fa-spin');
+    } else {
+        $button.prepend('<i class="fa fa-spinner fa-spin"></i> ');
+    }
+
+    var data = {'ajax_submit': true};
+
+    data[$button.attr('name')] = $button.val();
+
+    $form.find('input, textarea').each(function () {
+        var $input = $(this);
+        var $group = $input.parents('.form-group');
+
+        $input.removeClass('is-invalid');
+        $group.find('.invalid-feedback').remove();
+
+        if ($input.attr('type') === 'checkbox') {
+            data[$input.attr('name')] = $input.prop('checked') ? "on" : null;
+        } else if ($input.attr('type') === 'radio') {
+            if ($input.prop('checked'))
+                data[$input.attr('name')] = $input.val();
+        } else {
+            data[$input.attr('name')] = $input.val();
+        }
+    });
+
+    $.ajax({
+        method: $form.attr('method'),
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: data,
+        success: function (json, textStatus, jqXHR) {
+            var hasErrors;
+
+            for (var key in json['errors']) {
+                hasErrors = true;
+
+                var error = json['errors'][key];
+
+                var $element = $form.find('[name="' + key + '"]');
+                var $group = $element.parents('.form-group');
+
+                $element.addClass('is-invalid');
+
+                $group.append('<div class="invalid-feedback d-block">' + error + '</div>');
+            }
+
+            if (hasErrors) {
+                $form.prepend('<div class="alert alert-danger">The form contains errors.</div>');
+            } else {
+                $form.prepend('<div class="alert alert-success">Form submitted successfully.</div>');
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            $form.prepend('<div class="alert alert-danger">Unable to submit form: ' + errorThrown + '</div>');
+        },
+        complete: function (jqXHR, textStatus) {
+            if (faTemp)
+                $fa.attr('class', faTemp);
+            else
+                $button.find('i.fa').remove();
+
+            $('html, body').animate({
+                scrollTop: $form.offset().top - 50 // magic number is painfully magic
+            }, 100);
+
+            $form.find('fieldset, button').prop('disabled', false);
+            $form.find('a').removeClass('disabled');
+        }
+    });
+}
