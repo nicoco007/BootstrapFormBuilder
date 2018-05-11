@@ -214,6 +214,8 @@ class Form
     private function printJsonData() {
         $data = [];
 
+        $data['submitted'] = $this->isSubmitted();
+
         if (count($this->sections) > 0) {
             foreach ($this->sections as $section) {
                 foreach ($section->getControls() as $control) {

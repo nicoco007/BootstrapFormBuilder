@@ -90,6 +90,11 @@ function submitForm($form) {
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         data: data,
         success: function (json) {
+            if (json['submitted'] !== true) {
+                $form.prepend('<div class="alert alert-danger">An unexpected server-side error occured. Please try again later.</div>');
+                return;
+            }
+
             var hasErrors;
 
             for (var key in json['errors']) {
