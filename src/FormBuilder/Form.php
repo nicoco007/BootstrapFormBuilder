@@ -19,7 +19,7 @@
 namespace FormBuilder;
 
 
-class Form implements ControlParentInterface
+class Form
 {
     /** @var string */
     private $id;

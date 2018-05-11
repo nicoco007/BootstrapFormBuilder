@@ -19,7 +19,7 @@
 namespace FormBuilder;
 
 
-class FormSection implements ControlParentInterface
+class FormSection
 {
     /** @var Form */
     private $parent;
@@ -79,8 +79,8 @@ class FormSection implements ControlParentInterface
      */
     public function setParent($parent)
     {
-        if (!($parent instanceof ControlParentInterface))
-            throw new \InvalidArgumentException('Expected $control to be implementation of SubmittableInterface, got ' . Util::getType($parent));
+        if (!($parent instanceof Form))
+            throw new \InvalidArgumentException('Expected $control to be instance of Form, got ' . Util::getType($parent));
 
         foreach ($this->controls as $control)
             $control->setParent($parent);
