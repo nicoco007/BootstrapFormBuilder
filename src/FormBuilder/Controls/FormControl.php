@@ -156,7 +156,9 @@ abstract class FormControl
             throw new \InvalidArgumentException('Expected $parent to be instance of Form, got ' . Util::getType($parent));
 
         $this->parent = $parent;
+    }
 
+    public final function init() {
         if ($this->parent->isSubmitted()) {
             if (isset($_POST[$this->getName()]))
                 $this->raw_value = $_POST[$this->getName()];

@@ -53,6 +53,9 @@ class Form
         if (!isset($this->buttons['submit']))
             array_unshift($this->buttons, new SubmitButton());
 
+        foreach ($this->controls as $control)
+            $control->init();
+
         if ($this->isSubmitted() && !$this->hasError())
             $this->buttons['submit']->doAction();
 
