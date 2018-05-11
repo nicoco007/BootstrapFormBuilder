@@ -25,6 +25,13 @@ $(function () {
             $(this).attr('clicked', 'true');
         });
 
+        $form.find('input, textarea').on('change', function () {
+            window.onbeforeunload = function (event) {
+                event.returnValue = 'no';
+                return 'no';
+            };
+        });
+
         $form.on("submit", function (event) {
             event.preventDefault();
             submitForm($form);
@@ -113,6 +120,7 @@ function submitForm($form) {
 
             if (!hasErrors) {
                 $form.prepend('<div class="alert alert-success">Form submitted successfully.</div>');
+                window.onbeforeunload = null;
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -132,9 +140,7 @@ function submitForm($form) {
             else
                 scroll = $form.offset().top - 50; // ouch
 
-            $('html, body').animate({
-                scrollTop: scroll
-            }, 100);
+            $('html, body').animate({ scrollTop: scroll }, 100);
 
             $form.find('fieldset, button').prop('disabled', false);
             $form.find('a').removeClass('disabled');
