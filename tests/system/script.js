@@ -17,12 +17,16 @@
 
 'use strict';
 
-$(function() {
-    $('.bsfb-form').each(function() {
+$(function () {
+    $('.bsfb-form').each(function () {
         var $form = $(this);
 
+        /*$form.on("submit", function (event) {
+            event.preventDefault();
+        });*/
+
         // initialize date/time pickers
-        $form.find('.datetimepicker-date').each(function() {
+        $form.find('.datetimepicker-date').each(function () {
             var $element = $(this);
 
             var id = $element.find('input').attr('id');
@@ -33,5 +37,5 @@ $(function() {
                 locale: $element.data('locale') || 'en'
             })
         });
-    })
+    });
 });

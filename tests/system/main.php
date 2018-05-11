@@ -27,12 +27,16 @@ use FormBuilder\Controls\RadioButtonControl;
 use FormBuilder\Controls\TextAreaControl;
 use FormBuilder\Controls\TextControl;
 use FormBuilder\Form;
+use FormBuilder\FormSection;
 use FormBuilder\RedirectButton;
 use FormBuilder\SubmitButton;
 
 setlocale(LC_ALL, 'fr_ca');
 
 $form = new Form('post');
+
+$section1 = new FormSection('Section I');
+$section2 = new FormSection('Section II');
 
 $text_control = new TextControl('Name', 'name');
 $email_control = new EmailControl('Email Address', 'email');
@@ -65,13 +69,16 @@ $radio->addOption('Option 1', 'opt1', ['key' => 'value']);
 $radio->addOption('Option 2', 'opt2', ['otherkey' => 'othervalue']);
 $radio->addOption('Option 3', 'opt3', ['an', 'array']);
 
-$form->addControl($text_control);
-$form->addControl($email_control);
-$form->addControl($password_control);
-$form->addControl($checkbox);
-$form->addControl($date);
-$form->addControl($textarea);
-$form->addControl($radio);
+$section1->addControl($text_control);
+$section1->addControl($email_control);
+$section1->addControl($password_control);
+$section1->addControl($checkbox);
+$section2->addControl($date);
+$section2->addControl($textarea);
+$section2->addControl($radio);
+
+$form->addSection($section1);
+$form->addSection($section2);
 
 $form->addButton(new SubmitButton('Submit', 'plane'));
 $form->addButton(new RedirectButton('Cancel', 'https://www.google.com', BootstrapClass::LIGHT, 'ban'));

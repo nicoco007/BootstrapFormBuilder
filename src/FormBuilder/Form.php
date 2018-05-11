@@ -19,7 +19,7 @@
 namespace FormBuilder;
 
 
-class Form
+class Form implements ControlParentInterface
 {
     /** @var string */
     private $id;
@@ -32,6 +32,9 @@ class Form
 
     /** @var Controls\FormControl[] */
     private $controls;
+
+    /** @var FormSection[] */
+    private $sections;
 
     /** @var Button[] */
     private $buttons;
@@ -69,15 +72,21 @@ class Form
 
         printf('<form method="%s" class="bsfb-form">', $this->method);
 
-        print('<fieldset>');
+        if (count($this->sections) > 0) {
+            foreach ($this->sections as $section) {
+                $section->render();
+            }
+        } else {
+            print('<fieldset>');
 
-        printf('<input type="hidden" name="submitted" value="%s"/>', !Util::stringIsNullOrEmpty($this->id) ? $this->id : 'true');
+            printf('<input type="hidden" name="submitted" value="%s"/>', !Util::stringIsNullOrEmpty($this->id) ? $this->id : 'true');
 
-        foreach ($this->controls as $control) {
-            $control->render();
+            foreach ($this->controls as $control) {
+                $control->render();
+            }
+
+            print('</fieldset>');
         }
-
-        print('</fieldset>');
 
         foreach ($this->buttons as $button) {
             $button->render();
@@ -95,6 +104,9 @@ class Form
         if (!($control instanceof Controls\FormControl))
             throw new \InvalidArgumentException('Expected $control to be instance of FormControl, got ' . Util::getType($control));
 
+        if (count($this->sections) > 0)
+            throw new InvalidOperationException('Cannot add controls to form with sections');
+
         if (isset($this->controls[$control->getName()]))
             throw new \InvalidArgumentException(sprintf('A button with the name "%s" was already added', $control->getName()));
 
@@ -109,6 +121,30 @@ class Form
     public function getControls()
     {
         return $this->controls;
+    }
+
+    /**
+     * @param FormSection $section
+     */
+    public function addSection($section)
+    {
+        if (!($section instanceof FormSection))
+            throw new \InvalidArgumentException('Expected $section to be instance of FormSection, got ' . Util::getType($section));
+
+        if (count($this->controls) > 0)
+            throw new InvalidOperationException('Cannot add sections to form with independent controls');
+
+        $section->setParent($this);
+
+        $this->sections[] = $section;
+    }
+
+    /**
+     * @return FormSection[]
+     */
+    public function getSections()
+    {
+        return $this->sections;
     }
 
     /**
