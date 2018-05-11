@@ -119,8 +119,16 @@ function submitForm($form) {
             else
                 $button.find('i.fa').remove();
 
+            var scroll;
+            var $firstError = $form.find('.is-invalid:first').parents('.form-group');
+
+            if ($firstError.length)
+                scroll = $firstError.offset().top - 10; // magic number is painfully magic
+            else
+                scroll = $form.offset().top - 50; // ouch
+
             $('html, body').animate({
-                scrollTop: $form.find('.is-invalid:first').parent('.form-group').offset().top - 10 // magic number is painfully magic
+                scrollTop: scroll
             }, 100);
 
             $form.find('fieldset, button').prop('disabled', false);
