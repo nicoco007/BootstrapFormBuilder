@@ -1,4 +1,20 @@
 <?php
+/**
+ * Copyright © 2018  Nicolas Gnyra
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 require_once '../../vendor/autoload.php';
 
@@ -28,21 +44,22 @@ $radio = new RadioButtonControl('Choose one', 'radio');
 
 $text_control->setHint('Make sure to enter your full name.');
 $text_control->setPlaceholder('Enter name');
-$text_control->setRequired(true);
+
+$email_control->setPlaceholder('Enter email');
+$password_control->setPlaceholder('Enter password');
+$textarea->setPlaceholder('Start blabbing in here');
 
 $email_control->setHint("We'll never share your email with anyone else.");
-$email_control->setPlaceholder('Enter email');
-
 $password_control->setHint('Make sure to use something safe!');
-$password_control->setPlaceholder('Enter password');
+$checkbox->setHint('Check out our terms and conditions!');
 
-$checkbox->setHint('Hello');
+$text_control->setRequired(true);
+$email_control->setRequired(true);
+$password_control->setRequired(true);
 $checkbox->setRequired(true);
-
 $date->setRequired(true);
-
 $textarea->setRequired(true);
-$textarea->setPlaceholder('Start blabbing in here');
+$radio->setRequired(true);
 
 $radio->addOption('Option 1', 'opt1', ['key' => 'value']);
 $radio->addOption('Option 2', 'opt2', ['otherkey' => 'othervalue']);
@@ -112,11 +129,7 @@ function parseVal($val)
     <?php endif; ?>
 
     <h2>Form</h2>
-    <?php
-
-    $form->render();
-
-    ?>
+    <?php $form->render(); ?>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>

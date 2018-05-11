@@ -1,9 +1,26 @@
 <?php
+/**
+ * Copyright © 2018  Nicolas Gnyra
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace FormBuilder;
 
 
-class Util {
+class Util
+{
     private $DEFAULT_DIACRITICS_MAP = array(
         array('base' => 'A', 'letters' => '\x{0041}\x{24B6}\x{FF21}\x{00C0}\x{00C1}\x{00C2}\x{1EA6}\x{1EA4}\x{1EAA}\x{1EA8}\x{00C3}\x{0100}\x{0102}\x{1EB0}\x{1EAE}\x{1EB4}\x{1EB2}\x{0226}\x{01E0}\x{00C4}\x{01DE}\x{1EA2}\x{00C5}\x{01FA}\x{01CD}\x{0200}\x{0202}\x{1EA0}\x{1EAC}\x{1EB6}\x{1E00}\x{0104}\x{023A}\x{2C6F}'),
         array('base' => 'AA', 'letters' => '\x{A732}'),
@@ -98,7 +115,8 @@ class Util {
      * @param mixed $var
      * @return string
      */
-    public static function getType($var) {
+    public static function getType($var)
+    {
         if (is_object($var))
             return get_class($var);
         else
@@ -111,7 +129,8 @@ class Util {
      * @param string|string[] $classes
      * @return bool
      */
-    public static function instanceofArray($array, $classes) {
+    public static function instanceofArray($array, $classes)
+    {
         if (!is_array($classes))
             $classes = [$classes];
 
@@ -134,7 +153,8 @@ class Util {
      * @param array $array
      * @return string
      */
-    public static function getArrayTypes($array) {
+    public static function getArrayTypes($array)
+    {
         $classes = [];
 
         foreach ($array as $value)
@@ -144,14 +164,16 @@ class Util {
         return sprintf('[%s]', implode(', ', $classes));
     }
 
-    public static function stringIsNullOrEmpty($str) {
+    public static function stringIsNullOrEmpty($str)
+    {
         if ($str === null)
             return true;
 
         return trim($str) === "";
     }
 
-    public static function getLocale($category = LC_MESSAGES) {
+    public static function getLocale($category = LC_MESSAGES)
+    {
         $locale = strtolower(setlocale($category, 0));
 
         if (strlen($locale) > 5)
@@ -168,7 +190,8 @@ class Util {
      * @param int $category Locale category (e.g. LC_TIME, LC_MESSAGES, etc.)
      * @return string Returns the system locale formatted using the IETF standard (e.g. en-us)
      */
-    public static function getIETFLocale($category = LC_MESSAGES) {
+    public static function getIETFLocale($category = LC_MESSAGES)
+    {
         return str_replace('_', '-', self::getLocale($category));
     }
 }

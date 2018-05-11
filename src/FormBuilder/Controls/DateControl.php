@@ -1,4 +1,20 @@
 <?php
+/**
+ * Copyright © 2018  Nicolas Gnyra
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 namespace FormBuilder\Controls;
 
@@ -27,29 +43,24 @@ class DateControl extends FormControl
 
         printf('<div class="input-group datetimepicker-date" id="%s-wrapper" data-target-input="nearest" data-locale="%s">', $this->getName(), Util::getIETFLocale(LC_TIME));
 
-        print('<div class="input-group-prepend">');
-
-        printf('<button type="button" class="btn btn-primary" data-target="#%s-wrapper" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></button>', $this->getName());
-
-        print('</div>');
-
         printf(
             '<input type="text" class="%1$s" id="%2$s" name="%2$s" data-target="#%1$s-wrapper" placeholder="%3$s" value="%4$s">',
             $this->getClasses(), $this->getName(), Translations::translate('MM/DD/YYYY', 'date control string format'), $value
         );
 
+        print('</div>');
+
         if ($this->hasError())
-            printf('<div class="invalid-feedback">%s</div>', $this->getErrorMessage());
+            printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
 
         if (!Util::stringIsNullOrEmpty($this->getHint()))
             printf('<small class="form-text text-muted">%s</small>', $this->getHint());
 
         print('</div>');
-
-        print('</div>');
     }
 
-    public function getType() {
+    public function getType()
+    {
         return 'date';
     }
 
@@ -88,7 +99,8 @@ class DateControl extends FormControl
         $this->placeholder = $placeholder;
     }
 
-    private function getClasses() {
+    private function getClasses()
+    {
         $classes = ['form-control', 'datetimepicker-input', 'rounded-right'];
 
         if ($this->hasError())
