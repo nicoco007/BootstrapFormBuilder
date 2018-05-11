@@ -27,7 +27,7 @@ $(function () {
 
         $form.on("submit", function (event) {
             event.preventDefault();
-            submitForm($form, event);
+            submitForm($form);
         });
 
         // initialize date/time pickers
@@ -45,7 +45,7 @@ $(function () {
     });
 });
 
-function submitForm($form, event) {
+function submitForm($form) {
     // disable everything
     $form.find('fieldset, button').prop('disabled', true);
     $form.find('a').addClass('disabled');
@@ -85,12 +85,11 @@ function submitForm($form, event) {
         }
     });
 
-    // noinspection JSUnusedLocalSymbols
     $.ajax({
         method: $form.attr('method'),
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         data: data,
-        success: function (json, textStatus, jqXHR) {
+        success: function (json) {
             var hasErrors;
 
             for (var key in json['errors']) {
@@ -114,7 +113,7 @@ function submitForm($form, event) {
         error: function (jqXHR, textStatus, errorThrown) {
             $form.prepend('<div class="alert alert-danger">Unable to submit form: ' + errorThrown + '</div>');
         },
-        complete: function (jqXHR, textStatus) {
+        complete: function () {
             if (faTemp)
                 $fa.attr('class', faTemp);
             else
