@@ -51,8 +51,6 @@ function submitForm($form, event) {
     $form.find('a').addClass('disabled');
     $form.find('.alert').remove();
 
-    console.log(event.relatedTarget);
-
     var $button = $form.find('button[type="submit"][clicked=true]');
     var $fa = $button.find('i.fa');
     var faTemp;
@@ -87,6 +85,7 @@ function submitForm($form, event) {
         }
     });
 
+    // noinspection JSUnusedLocalSymbols
     $.ajax({
         method: $form.attr('method'),
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -97,6 +96,7 @@ function submitForm($form, event) {
             for (var key in json['errors']) {
                 hasErrors = true;
 
+                // noinspection JSUnfilteredForInLoop
                 var error = json['errors'][key];
 
                 var $element = $form.find('[name="' + key + '"]');
@@ -107,9 +107,7 @@ function submitForm($form, event) {
                 $group.append('<div class="invalid-feedback d-block">' + error + '</div>');
             }
 
-            if (hasErrors) {
-                $form.prepend('<div class="alert alert-danger">The form contains errors.</div>');
-            } else {
+            if (!hasErrors) {
                 $form.prepend('<div class="alert alert-success">Form submitted successfully.</div>');
             }
         },
@@ -123,7 +121,7 @@ function submitForm($form, event) {
                 $button.find('i.fa').remove();
 
             $('html, body').animate({
-                scrollTop: $form.offset().top - 50 // magic number is painfully magic
+                scrollTop: $form.find('.is-invalid:first').parent('.form-group').offset().top - 10 // magic number is painfully magic
             }, 100);
 
             $form.find('fieldset, button').prop('disabled', false);
