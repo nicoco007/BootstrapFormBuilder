@@ -1,7 +1,7 @@
 {
   "name": "bootstrap-form-builder",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple form builder for Bootstrap 4",
   "dependencies": {},
   "devDependencies": {
     "grunt": "^1.0.2",
