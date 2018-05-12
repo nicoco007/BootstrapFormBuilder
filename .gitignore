@@ -1,7 +1,5 @@
 .idea/workspace.xml
 /vendor/
-*.min.js
-*.map
 .idea/copyright/
 .idea/dictionaries/
 .idea/inspectionProfiles/
