@@ -159,6 +159,7 @@ function parseVal($val)
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css"
           integrity="sha256-sJQnfQcpMXjRFWGNJ9/BWB1l6q7bkQYsRqToxoHlNJY=" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="../../dist/css/style.min.css"/>
 </head>
 <body>
 <div class="container">

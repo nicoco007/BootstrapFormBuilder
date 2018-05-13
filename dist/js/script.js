@@ -52,6 +52,46 @@ var BootstrapFormBuilder = {
                     locale: $element.data('locale') || 'en'
                 })
             });
+
+            $form.find('select').each(function () {
+                var $input = $(this);
+                var $options = $input.find('option');
+                var id = $input.attr('id') || $input.attr('name');
+
+                var $dropdown = $('<div class="dropdown bsfb-select">');
+                var $button = $('<button class="btn btn-light dropdown-toggle" type="button" id="' + id + '-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
+                var $buttonText = $('<span class="select-text"></span>');
+                var $buttonTextInner = $('<span class="select-text-inner"></span>');
+                var $menu = $('<div class="dropdown-menu" aria-labelledby="' + id + '-dropdown">');
+
+                $options.each(function () {
+                    var $option = $(this);
+                    var $element = $('<span class="dropdown-item" data-value="' + $option.val() + '">' + $option.text() + '</span>');
+
+                    $element.on('click', function () {
+                        $input.val($element.data('value'));
+                        $buttonTextInner.text($element.text())
+                    });
+
+                    $menu.append($element);
+                });
+
+                var $selectedOption = $options.filter('[selected="selected"]').first();
+
+                if (!$selectedOption.length)
+                    $selectedOption = $options.first();
+
+                $buttonTextInner.text($selectedOption.text());
+
+                $input.after($dropdown);
+                $input.remove();
+
+                $buttonText.append($buttonTextInner);
+                $button.append($buttonText);
+                $dropdown.append($button);
+                $dropdown.append($menu);
+                $dropdown.append($input);
+            });
         });
     },
     form: {
@@ -162,7 +202,7 @@ var BootstrapFormBuilder = {
                 else
                     scroll = $form.offset().top - 50; // ouch
 
-                $('html, body').animate({ scrollTop: scroll }, 100);
+                $('html, body').animate({scrollTop: scroll}, 100);
 
                 $form.find('fieldset, button').prop('disabled', false);
                 $form.find('a').removeClass('disabled');

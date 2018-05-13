@@ -17,6 +17,20 @@
 
 module.exports = function(grunt) {
     grunt.initConfig({
+        sass: {
+            dist: {
+                options: {
+                    style: 'compressed'
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'dist/scss',
+                    src: ['*.scss'],
+                    dest: 'dist/css',
+                    ext: '.min.css'
+                }]
+            }
+        },
         uglify: {
             options: {
                 mangle: true,
@@ -30,7 +44,8 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['uglify']);
+    grunt.registerTask('default', ['sass', 'uglify']);
 };
