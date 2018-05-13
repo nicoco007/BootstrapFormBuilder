@@ -68,45 +68,47 @@ var BootstrapFormBuilder = {
             });
 
             $form.find('select').each(function () {
-                var $input = $(this);
-                var $options = $input.find('option');
-                var id = $input.attr('id') || $input.attr('name');
-
-                var $dropdown = $('<div class="dropdown bsfb-select">');
-                var $button = $('<button class="btn btn-light dropdown-toggle form-control" type="button" id="' + id + '-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ref="' + id + '">');
-                var $buttonText = $('<span class="select-text"></span>');
-                var $buttonTextInner = $('<span class="select-text-inner"></span>');
-                var $menu = $('<div class="dropdown-menu" aria-labelledby="' + id + '-dropdown">');
-
-                $options.each(function () {
-                    var $option = $(this);
-                    var $element = $('<span class="dropdown-item" data-value="' + $option.val() + '">' + $option.text() + '</span>');
-
-                    $element.on('click', function () {
-                        $input.val($element.data('value'));
-                        $buttonTextInner.text($element.text())
-                    });
-
-                    $menu.append($element);
-                });
-
-                var $selectedOption = $options.filter('[value="' + $input.val() + '"]').first();
-
-                if (!$selectedOption.length)
-                    $selectedOption = $options.first();
-
-                $buttonTextInner.text($selectedOption.text());
-
-                $input.after($dropdown);
-                $input.remove();
-
-                $buttonText.append($buttonTextInner);
-                $button.append($buttonText);
-                $dropdown.append($button);
-                $dropdown.append($menu);
-                $dropdown.append($input);
+                self.dropdownSelect($(this));
             });
         });
+    },
+    dropdownSelect: function ($input) {
+        var $options = $input.find('option');
+        var id = $input.attr('id') || $input.attr('name');
+
+        var $dropdown = $('<div class="dropdown bsfb-select">');
+        var $button = $('<button class="btn btn-light dropdown-toggle form-control" type="button" id="' + id + '-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ref="' + id + '">');
+        var $buttonText = $('<span class="select-text"></span>');
+        var $buttonTextInner = $('<span class="select-text-inner"></span>');
+        var $menu = $('<div class="dropdown-menu" aria-labelledby="' + id + '-dropdown">');
+
+        $options.each(function () {
+            var $option = $(this);
+            var $element = $('<span class="dropdown-item" data-value="' + $option.val() + '">' + $option.text() + '</span>');
+
+            $element.on('click', function () {
+                $input.val($element.data('value'));
+                $buttonTextInner.text($element.text())
+            });
+
+            $menu.append($element);
+        });
+
+        var $selectedOption = $options.filter('[value="' + $input.val() + '"]').first();
+
+        if (!$selectedOption.length)
+            $selectedOption = $options.first();
+
+        $buttonTextInner.text($selectedOption.text());
+
+        $input.after($dropdown);
+        $input.remove();
+
+        $buttonText.append($buttonTextInner);
+        $button.append($buttonText);
+        $dropdown.append($button);
+        $dropdown.append($menu);
+        $dropdown.append($input);
     },
     form: {
         submit: function ($form) {
