@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: BootstrapFormBuilder\n"
-"POT-Creation-Date: 2018-05-08 22:55-0400\n"
-"PO-Revision-Date: 2018-05-08 22:56-0400\n"
+"POT-Creation-Date: 2018-05-13 15:17-0400\n"
+"PO-Revision-Date: 2018-05-13 15:17-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_CA\n"
@@ -15,20 +15,28 @@ msgstr ""
 "X-Poedit-KeywordsList: ;translate:2c,1;translate:1\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Controls/DateControl.php:22
+#: Controls/DateControl.php:38
 msgctxt "date control DateTime format"
 msgid "m/d/Y"
 msgstr "Y-m-d"
 
-#: Controls/DateControl.php:38
+#: Controls/DateControl.php:48
 msgctxt "date control string format"
 msgid "MM/DD/YYYY"
 msgstr "AAAA-MM-JJ"
 
-#: Controls/DateControl.php:67
+#: Controls/DateControl.php:78
 msgid "Please enter a valid date."
 msgstr "Veuillez entrer une date valide."
 
-#: Controls/FormControl.php:125
+#: Controls/FormControl.php:145
 msgid "This field is required."
 msgstr "Ce champ est requis."
+
+#: Controls/SelectControl.php:37
+msgid "Select an option&hellip;"
+msgstr "Sélectionnez une option&hellip;"
+
+#: SubmitButton.php:95
+msgid "Form submitted successfully."
+msgstr "Formulaire soumis."
