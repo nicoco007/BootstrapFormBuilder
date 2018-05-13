@@ -43,8 +43,4 @@ class RedirectButton extends Button
         else
             printf('<a href="%s" class="btn btn-%s">%s</a>', $this->url, $this->getClass(), $this->getText());
     }
-
-    public function doAction()
-    {
-    }
 }
