@@ -126,10 +126,14 @@ class Form
             print('</fieldset>');
         }
 
+        print('<div class="form-group">');
+
         foreach ($this->buttons as $button) {
             $button->render();
             print(' ');
         }
+
+        print('</div>');
 
         print('</form>');
     }
