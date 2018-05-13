@@ -30,6 +30,9 @@ class Form
     /** @var bool */
     private $init;
 
+    /** @var Response */
+    private $response;
+
     /** @var Controls\FormControl[] */
     private $controls;
 
@@ -68,14 +71,13 @@ class Form
         if ($this->isSubmitted()) {
             /** @var SubmitButton $submit_button */
             $submit_button = $this->buttons[$_POST['submit']];
-            $response = null;
             $error = null;
 
             if (!$this->hasError()) {
                 $controls = $this->getControls();
 
                 try {
-                    $response = $submit_button->submitCallback($controls);
+                    $this->response = $submit_button->submitCallback($controls);
                     $submit_button->successCallback();
                 } catch (\Exception $ex) {
                     $error = $ex;
@@ -85,7 +87,10 @@ class Form
             }
 
             if ($this->isAjaxSubmit()) {
-                $this->printJsonData($response, $error);
+                $this->printJsonData($error);
+            } else {
+                if ($this->response->getRedirectUrl() !== null)
+                    header('Location: ' . $this->response->getRedirectUrl());
             }
         }
 
@@ -98,6 +103,9 @@ class Form
             throw new \RuntimeException('Form::init must be called before rendering');
 
         printf('<form method="%s" class="bsfb-form">', $this->method);
+
+        if ($this->response !== null)
+            printf('<div class="alert alert-%s">%s</div>', $this->response->getClass(), $this->response->getMessage());
 
         printf('<input type="hidden" name="submitted" value="%s"/>', !Util::stringIsNullOrEmpty($this->id) ? $this->id : 'true');
 
@@ -258,20 +266,20 @@ class Form
     }
 
     /**
-     * @param Response $response
      * @param \Exception $ex
      */
-    private function printJsonData($response, $ex)
+    private function printJsonData($ex)
     {
         $data = [];
 
-        $data['submitted'] = $this->isSubmitted();
-        $data['success'] = $response instanceof SuccessResponse;
+        $data['received'] = $this->isSubmitted();
+        $data['success'] = $this->response instanceof SuccessResponse;
 
-        if ($response !== null) {
+        if ($this->response !== null) {
             $data['response'] = [
-                'message' => $response->getMessage(),
-                'class' => $response->getClass()
+                'message' => $this->response->getMessage(),
+                'class' => $this->response->getClass(),
+                'redirect' => $this->response->getRedirectUrl()
             ];
         }
 

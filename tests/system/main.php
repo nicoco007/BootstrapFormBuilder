@@ -111,6 +111,8 @@ $submit_button->setSubmitCallback(function ($controls) {
     /** @var \FormBuilder\Controls\FormControl[] $controls */
     if ($controls['password']->getValue() === 'dummy')
         return new ErrorResponse('No.');
+    elseif ($controls['name']->getValue() === 'redirectme')
+        return new SuccessResponse('Goodbye', 'https://www.google.com');
 
     return new SuccessResponse('You did it!');
 });

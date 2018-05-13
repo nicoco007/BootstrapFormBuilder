@@ -30,9 +30,6 @@ class SubmitButton extends Button
     /** @var callable */
     private $error_callback;
 
-    /** @var string */
-    private $redirect_url;
-
     public function __construct($text = 'Submit', $name = 'submit', $icon = 'save', $class = BootstrapClass::SUCCESS)
     {
         parent::__construct($name, $text, $class, $icon);
@@ -68,17 +65,6 @@ class SubmitButton extends Button
     public function setErrorCallback($error_callback)
     {
         $this->error_callback = $error_callback;
-    }
-
-    /**
-     * @param string $redirect_url
-     */
-    public function setRedirectUrl($redirect_url)
-    {
-        if (!Util::stringIsNullOrEmpty($redirect_url) && !is_string($redirect_url))
-            throw new \InvalidArgumentException('Expected $redirect_url to be string, got ' . Util::getType($redirect_url));
-
-        $this->redirect_url = $redirect_url;
     }
 
     /**

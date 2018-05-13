@@ -27,12 +27,16 @@ abstract class Response
     /** @var string */
     private $class;
 
+    /** @var string */
+    private $redirect_url;
+
     /**
      * Response constructor.
      * @param string $message
      * @param string $class
+     * @param string $redirect_url
      */
-    public function __construct($message, $class)
+    public function __construct($message, $class, $redirect_url = null)
     {
         if (!is_string($message))
             throw new \InvalidArgumentException('Expected $message to be string, got ' . Util::getType(($message)));
@@ -40,8 +44,12 @@ abstract class Response
         if (!is_string($class))
             throw new \InvalidArgumentException('Expected $class to be string, got ' . Util::getType(($class)));
 
+        if ($redirect_url !== null && !is_string($redirect_url))
+            throw new \InvalidArgumentException('Expected $redirect_url to be string, got ' . Util::getType(($redirect_url)));
+
         $this->message = $message;
         $this->class = $class;
+        $this->redirect_url = $redirect_url;
     }
 
     /**
@@ -58,5 +66,13 @@ abstract class Response
     public function getClass()
     {
         return $this->class;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectUrl()
+    {
+        return $this->redirect_url;
     }
 }

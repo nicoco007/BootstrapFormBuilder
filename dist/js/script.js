@@ -76,7 +76,7 @@ var BootstrapFormBuilder = {
                     $menu.append($element);
                 });
 
-                var $selectedOption = $options.filter('[selected="selected"]').first();
+                var $selectedOption = $options.filter('[value="' + $input.val() + '"]').first();
 
                 if (!$selectedOption.length)
                     $selectedOption = $options.first();
@@ -152,7 +152,7 @@ var BootstrapFormBuilder = {
         },
         ajax: {
             success: function ($form, json) {
-                if (json['submitted'] !== true) {
+                if (json['received'] !== true) {
                     $form.prepend('<div class="alert alert-danger">An unexpected server-side error occured. Please try again later.</div>');
                     return;
                 }
@@ -182,6 +182,9 @@ var BootstrapFormBuilder = {
 
                     if (json['success'])
                         window.onbeforeunload = null;
+
+                    if (json['response']['redirect'])
+                        window.location = json['response']['redirect'];
                 } else {
                     $form.prepend('<div class="alert alert-success">Form submitted successfully.</div>');
                     window.onbeforeunload = null;
