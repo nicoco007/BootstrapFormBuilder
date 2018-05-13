@@ -117,23 +117,30 @@ var BootstrapFormBuilder = {
                     return;
                 }
 
-                var hasErrors;
+                if (json['controlErrors']) {
+                    for (var key in json['controlErrors']) {
+                        // noinspection JSUnfilteredForInLoop
+                        var error = json['controlErrors'][key];
 
-                for (var key in json['errors']) {
-                    hasErrors = true;
+                        var $element = $form.find('[name="' + key + '"]');
+                        var $group = $element.parents('.form-group');
 
-                    // noinspection JSUnfilteredForInLoop
-                    var error = json['errors'][key];
+                        $element.addClass('is-invalid');
 
-                    var $element = $form.find('[name="' + key + '"]');
-                    var $group = $element.parents('.form-group');
+                        $group.append('<div class="invalid-feedback d-block">' + error + '</div>');
+                    }
+                } else if (json['error']) {
+                    if (json['error']['message']) {
+                        $form.prepend('<div class="alert alert-danger">' + json['error']['message'] + '</div>');
+                    } else {
+                        $form.prepend('<div class="alert alert-danger">An unexpected error occured.</div>');
+                    }
+                } else if (json['response']) {
+                    $form.prepend('<div class="alert alert-' + json['response']['class'] + '">' + json['response']['message'] + '</div>');
 
-                    $element.addClass('is-invalid');
-
-                    $group.append('<div class="invalid-feedback d-block">' + error + '</div>');
-                }
-
-                if (!hasErrors) {
+                    if (json['success'])
+                        window.onbeforeunload = null;
+                } else {
                     $form.prepend('<div class="alert alert-success">Form submitted successfully.</div>');
                     window.onbeforeunload = null;
                 }

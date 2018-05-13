@@ -21,29 +21,92 @@ namespace FormBuilder;
 
 class SubmitButton extends Button
 {
+    /** @var callable */
+    private $submit_callback;
+
+    /** @var callable */
+    private $success_callback;
+
+    /** @var callable */
+    private $error_callback;
+
+    /** @var string */
     private $redirect_url;
 
-    public function __construct($text = 'Submit', $icon = 'save', $redirect_url = null)
+    public function __construct($text = 'Submit', $name = 'submit', $icon = 'save', $class = BootstrapClass::SUCCESS)
     {
-        if (!Util::stringIsNullOrEmpty($redirect_url) && !is_string($redirect_url))
-            throw new \InvalidArgumentException('Expected $redirect_url to be string, got ' . Util::getType($redirect_url));
-
-        parent::__construct('submit', $text, BootstrapClass::SUCCESS, $icon);
-
-        $this->redirect_url = $redirect_url;
-    }
-
-    public function doAction()
-    {
-        if (!Util::stringIsNullOrEmpty($this->redirect_url))
-            header('Location: ' . $this->redirect_url);
+        parent::__construct($name, $text, $class, $icon);
     }
 
     public function render()
     {
         if (!Util::stringIsNullOrEmpty($this->getIcon()))
-            printf('<button class="btn btn-%s" type="submit" name="submit" value="%s"><i class="fa fa-%s"></i>&nbsp;%s</button>', $this->getClass(), $this->getName(), $this->getIcon(), $this->getText());
+            printf('<button class="btn btn-%1$s" type="submit" id="%2$s" name="submit" value="%2$s"><i class="fa fa-%3$s"></i>&nbsp;%4$s</button>', $this->getClass(), $this->getId(), $this->getIcon(), $this->getText());
         else
-            printf('<button class="btn btn-%s" type="submit" name="submit" value="%s">%s</button>', $this->getClass(), $this->getName(), $this->getText());
+            printf('<button class="btn btn-%1$s" type="submit" id="%2$s" name="submit" value="%2$s">%3$s</button>', $this->getClass(), $this->getId(), $this->getText());
+    }
+
+    /**
+     * @param callable $submit_callback
+     */
+    public function setSubmitCallback($submit_callback)
+    {
+        $this->submit_callback = $submit_callback;
+    }
+
+    /**
+     * @param callable $success_callback
+     */
+    public function setSuccessCallback($success_callback)
+    {
+        $this->success_callback = $success_callback;
+    }
+
+    /**
+     * @param callable $error_callback
+     */
+    public function setErrorCallback($error_callback)
+    {
+        $this->error_callback = $error_callback;
+    }
+
+    /**
+     * @param string $redirect_url
+     */
+    public function setRedirectUrl($redirect_url)
+    {
+        if (!Util::stringIsNullOrEmpty($redirect_url) && !is_string($redirect_url))
+            throw new \InvalidArgumentException('Expected $redirect_url to be string, got ' . Util::getType($redirect_url));
+
+        $this->redirect_url = $redirect_url;
+    }
+
+    /**
+     * @param Controls\FormControl[] $controls
+     * @return Response
+     */
+    public function submitCallback($controls)
+    {
+        $response = null;
+
+        if ($this->submit_callback !== null)
+            $response = call_user_func($this->submit_callback, $controls);
+
+        return $response ?: new SuccessResponse(Translations::translate('Form submitted successfully.'));
+    }
+
+    public function successCallback()
+    {
+        if ($this->success_callback !== null)
+            call_user_func($this->success_callback);
+    }
+
+    /**
+     * @param \Exception $ex
+     */
+    public function errorCallback($ex)
+    {
+        if ($this->error_callback !== null)
+            call_user_func($this->error_callback, $ex);
     }
 }

@@ -39,6 +39,12 @@ class Form
     /** @var Button[] */
     private $buttons;
 
+    /** @var string */
+    private $success_message;
+
+    /** @var bool */
+    private $has_submit_button;
+
     /**
      * Form constructor.
      * @param string $method GET or POST
@@ -53,7 +59,7 @@ class Form
 
     public function init()
     {
-        if (!isset($this->buttons['submit']))
+        if (!isset($this->has_submit_button))
             array_unshift($this->buttons, new SubmitButton());
 
         foreach ($this->controls as $control)
@@ -63,10 +69,35 @@ class Form
             foreach ($section->getControls() as $control)
                 $control->init();
 
-        if ($this->isAjaxSubmit()) {
-            $this->printJsonData();
-        } else if (!$this->hasError()) {
-            $this->buttons['submit']->doAction();
+        if ($this->isSubmitted()) {
+            /** @var SubmitButton $submit_button */
+            $submit_button = $this->buttons[$_POST['submit']];
+            $response = null;
+            $error = null;
+
+            if (!$this->hasError()) {
+                $controls = [];
+
+                if (count($this->sections) > 0) {
+                    foreach ($this->sections as $section)
+                        $controls += $section->getControls();
+                } else {
+                    $controls = $this->controls;
+                }
+
+                try {
+                    $response = $submit_button->submitCallback($controls);
+                    $submit_button->successCallback();
+                } catch (\Exception $ex) {
+                    $error = $ex;
+
+                    $submit_button->errorCallback($ex);
+                }
+            }
+
+            if ($this->isAjaxSubmit()) {
+                $this->printJsonData($response, $error);
+            }
         }
 
         $this->init = true;
@@ -162,10 +193,13 @@ class Form
         if (!($button instanceof Button))
             throw new \InvalidArgumentException('Expected $button to be instance of Button, got ' . Util::getType($button));
 
-        if (isset($this->buttons[$button->getName()]))
-            throw new \InvalidArgumentException(sprintf('A button with the name "%s" was already added', $button->getName()));
+        if (isset($this->buttons[$button->getId()]))
+            throw new \InvalidArgumentException(sprintf('A button with the ID "%s" was already added', $button->getId()));
 
-        $this->buttons[$button->getName()] = $button;
+        if ($button instanceof SubmitButton)
+            $this->has_submit_button = true;
+
+        $this->buttons[$button->getId()] = $button;
     }
 
     /**
@@ -173,7 +207,9 @@ class Form
      */
     public function isSubmitted()
     {
-        return isset($_POST['submitted']) && ((isset($this->id) && $_POST['submitted'] === $this->id) || $_POST['submitted'] === "true") && isset($_POST['submit']) && $_POST['submit'] === 'submit';
+        return isset($_POST['submitted'])
+            && ((isset($this->id) && $_POST['submitted'] === $this->id) || $_POST['submitted'] === "true")
+            && isset($_POST['submit']) && in_array($_POST['submit'], array_keys($this->buttons));
     }
 
     /**
@@ -211,22 +247,53 @@ class Form
         return $this->id;
     }
 
-    private function printJsonData() {
+    /**
+     * @param string $success_message
+     */
+    public function setSuccessMessage($success_message)
+    {
+        $this->success_message = $success_message;
+    }
+
+    /**
+     * @param Response $response
+     * @param \Exception $ex
+     */
+    private function printJsonData($response, $ex) {
         $data = [];
 
         $data['submitted'] = $this->isSubmitted();
+        $data['success'] = $response instanceof SuccessResponse;
+
+        if ($response !== null) {
+            $data['response'] = [
+                'message' => $response->getMessage(),
+                'class' => $response->getClass()
+            ];
+        }
+
+        if ($ex !== null) {
+            $data['error'] = [
+                'type' => get_class($ex),
+                'message' => $ex->getMessage(),
+                'code' => $ex->getCode(),
+                'line' => $ex->getLine(),
+                'file' => $ex->getFile(),
+                'trace' => $ex->getTrace()
+            ];
+        }
 
         if (count($this->sections) > 0) {
             foreach ($this->sections as $section) {
                 foreach ($section->getControls() as $control) {
                     if ($control->hasError())
-                        $data['errors'][$control->getName()] = $control->getErrorMessage();
+                        $data['controlErrors'][$control->getName()] = $control->getErrorMessage();
                 }
             }
         } else {
             foreach ($this->controls as $control) {
                 if ($control->hasError())
-                    $data['errors'][$control->getName()] = $control->getErrorMessage();
+                    $data['controlErrors'][$control->getName()] = $control->getErrorMessage();
             }
         }
 

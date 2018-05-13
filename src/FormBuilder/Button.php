@@ -22,7 +22,7 @@ namespace FormBuilder;
 abstract class Button
 {
     /** @var string */
-    private $name;
+    private $id;
 
     /** @var string */
     private $text;
@@ -35,15 +35,15 @@ abstract class Button
 
     /**
      * Button constructor.
-     * @param string $name
+     * @param string $id
      * @param string $text
      * @param string $class
      * @param string|null $icon
      */
-    public function __construct($name, $text, $class, $icon = null)
+    public function __construct($id, $text, $class, $icon = null)
     {
-        if (!is_string($name))
-            throw new \InvalidArgumentException('Expected $name to be string, got ' . Util::getType($name));
+        if (!is_string($id))
+            throw new \InvalidArgumentException('Expected $id to be string, got ' . Util::getType($id));
 
         if (!is_string($text))
             throw new \InvalidArgumentException('Expected $text to be string, got ' . Util::getType($text));
@@ -54,7 +54,7 @@ abstract class Button
         if ($icon !== null && !is_string($icon))
             throw new \InvalidArgumentException('Expected $icon to be null or string, got ' . Util::getType($icon));
 
-        $this->name = $name;
+        $this->id = $id;
         $this->text = $text;
         $this->class = $class;
         $this->icon = $icon;
@@ -62,14 +62,12 @@ abstract class Button
 
     public abstract function render();
 
-    public abstract function doAction();
-
     /**
      * @return string
      */
-    public function getName()
+    public function getId()
     {
-        return $this->name;
+        return $this->id;
     }
 
     /**

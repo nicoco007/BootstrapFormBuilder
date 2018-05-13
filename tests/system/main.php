@@ -26,10 +26,12 @@ use FormBuilder\Controls\PasswordControl;
 use FormBuilder\Controls\RadioButtonControl;
 use FormBuilder\Controls\TextAreaControl;
 use FormBuilder\Controls\TextControl;
+use FormBuilder\ErrorResponse;
 use FormBuilder\Form;
 use FormBuilder\FormSection;
 use FormBuilder\RedirectButton;
 use FormBuilder\SubmitButton;
+use FormBuilder\SuccessResponse;
 
 setlocale(LC_ALL, 'fr_ca');
 
@@ -80,7 +82,24 @@ $section2->addControl($radio);
 $form->addSection($section1);
 $form->addSection($section2);
 
-$form->addButton(new SubmitButton('Submit', 'plane'));
+$submit_button = new SubmitButton();
+
+$submit_button->setSubmitCallback(function ($controls) {
+    /** @var \FormBuilder\Controls\FormControl[] $controls */
+    if ($controls['password']->getValue() === 'dummy')
+        return new ErrorResponse('No.');
+
+    return new SuccessResponse('You did it!');
+});
+
+$other = new SubmitButton('Do something else', 'other', 'plane', BootstrapClass::SECONDARY);
+
+$other->setSubmitCallback(function ($controls) {
+    return new ErrorResponse('This always does absolutely nothing!');
+});
+
+$form->addButton($submit_button);
+$form->addButton($other);
 $form->addButton(new RedirectButton('Cancel', 'https://www.google.com', BootstrapClass::LIGHT, 'ban'));
 
 $form->init();

@@ -66,7 +66,7 @@ class FormSection
         if (!($control instanceof Controls\FormControl))
             throw new \InvalidArgumentException('Expected $control to be instance of FormControl, got ' . Util::getType($control));
 
-        $this->controls[] = $control;
+        $this->controls[$control->getName()] = $control;
     }
 
     public function getControls()
