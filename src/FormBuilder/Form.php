@@ -62,12 +62,8 @@ class Form
         if (!isset($this->has_submit_button))
             array_unshift($this->buttons, new SubmitButton());
 
-        foreach ($this->controls as $control)
+        foreach ($this->getControls() as $control)
             $control->init();
-
-        foreach ($this->sections as $section)
-            foreach ($section->getControls() as $control)
-                $control->init();
 
         if ($this->isSubmitted()) {
             /** @var SubmitButton $submit_button */
@@ -76,14 +72,7 @@ class Form
             $error = null;
 
             if (!$this->hasError()) {
-                $controls = [];
-
-                if (count($this->sections) > 0) {
-                    foreach ($this->sections as $section)
-                        $controls += $section->getControls();
-                } else {
-                    $controls = $this->controls;
-                }
+                $controls = $this->getControls();
 
                 try {
                     $response = $submit_button->submitCallback($controls);
@@ -162,7 +151,16 @@ class Form
      */
     public function getControls()
     {
-        return $this->controls;
+        if (count($this->sections) > 0) {
+            $controls = [];
+
+            foreach ($this->sections as $section)
+                $controls += $section->getControls();
+
+            return $controls;
+        } else {
+            return $this->controls;
+        }
     }
 
     /**
@@ -263,7 +261,8 @@ class Form
      * @param Response $response
      * @param \Exception $ex
      */
-    private function printJsonData($response, $ex) {
+    private function printJsonData($response, $ex)
+    {
         $data = [];
 
         $data['submitted'] = $this->isSubmitted();

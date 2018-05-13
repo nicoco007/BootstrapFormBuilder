@@ -20,9 +20,10 @@ namespace FormBuilder\Controls;
 
 
 use FormBuilder\HtmlTag;
+use FormBuilder\Translations;
 use FormBuilder\Util;
 
-class RadioButtonControl extends MultiOptionControl
+class SelectControl extends MultiOptionControl
 {
     public function render()
     {
@@ -30,28 +31,23 @@ class RadioButtonControl extends MultiOptionControl
 
         printf('<label>%s</label>', $this->getLabel());
 
+        printf('<select class="%s" name="%s">', $this->getClasses(), $this->getName());
+
+        if (!$this->hasDefault())
+            printf('<option value="">%s</option>', Translations::translate('Select an option&hellip;'));
+
         foreach ($this->getOptions() as $option) {
-            print('<div class="custom-control custom-radio">');
-
-            $input = new HtmlTag('input', true);
-
-            $id = $this->getName() . '_' . $option->getKey();
-
-            $input->addAttribute('type', 'radio');
-            $input->addAttribute('id', $id);
-            $input->addAttribute('name', $this->getName());
-            $input->addAttribute('value', $option->getKey());
-            $input->addAttribute('class', $this->getClasses());
+            $tag = new HtmlTag('option');
+            $tag->addAttribute('value', $option->getKey());
+            $tag->setInnerText($option->getLabel());
 
             if (($this->getSubmittedKey() === null && $option->isDefault()) || $option->getKey() === $this->getSubmittedKey())
-                $input->addAttribute('checked');
+                $tag->addAttribute('selected');
 
-            $input->render();
-
-            printf('<label class="custom-control-label" for="%s">%s</label>', $id, $option->getLabel());
-
-            print('</div>');
+            $tag->render();
         }
+
+        print('</select>');
 
         if ($this->hasError())
             printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
@@ -64,12 +60,12 @@ class RadioButtonControl extends MultiOptionControl
 
     public function getType()
     {
-        return 'radio';
+        return 'select';
     }
 
     private function getClasses()
     {
-        $classes = ['custom-control-input'];
+        $classes = ['form-control'];
 
         if ($this->hasError())
             $classes[] = 'is-invalid';

@@ -42,13 +42,15 @@ class CheckboxControl extends FormControl
 
         printf('<label class="custom-control-label" for="%s">%s</label>', $this->getName(), $this->getLabel());
 
+        print('</div>');
+
         if ($this->hasError())
             printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
 
         if (!Util::stringIsNullOrEmpty($this->getHint()))
             printf('<small class="form-text text-muted">%s</small>', $this->getHint());
 
-        print('</div></div>');
+        print('</div>');
     }
 
     public function getType()

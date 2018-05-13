@@ -21,7 +21,7 @@ namespace FormBuilder\Controls;
 
 use FormBuilder\Util;
 
-class RadioOption
+class ControlOption
 {
     /** @var string */
     private $label;
@@ -32,13 +32,17 @@ class RadioOption
     /** @var string */
     private $value;
 
+    /** @var bool */
+    private $is_default;
+
     /**
      * RadioOption constructor.
      * @param string $label
      * @param string $key
      * @param mixed $value
+     * @param bool $is_default
      */
-    public function __construct($label, $key, $value)
+    public function __construct($label, $key, $value = null, $is_default = false)
     {
         if (!is_string($label))
             throw new \InvalidArgumentException('Expected $label to be string, got ' . Util::getType($label));
@@ -46,9 +50,17 @@ class RadioOption
         if (!is_string($key))
             throw new \InvalidArgumentException('Expected $key to be string, got ' . Util::getType($key));
 
+        if (!is_bool($is_default))
+            throw new \InvalidArgumentException('Expected $is_default to be boolean, got ' . Util::getType($is_default));
+
         $this->label = $label;
         $this->key = $key;
-        $this->value = $value;
+        $this->is_default = $is_default;
+
+        if ($value !== null)
+            $this->value = $value;
+        else
+            $this->value = $key;
     }
 
     /**
@@ -73,5 +85,13 @@ class RadioOption
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault()
+    {
+        return $this->is_default;
     }
 }

@@ -30,15 +30,43 @@ class HtmlTag
     /** @var object[] */
     private $attributes;
 
+    /** @var string */
+    private $inner;
+
     public function __construct($name, $self_enclosed = false)
     {
+        if (!is_string($name))
+            throw new \InvalidArgumentException('Expected $name to be string, got ' . Util::getType($name));
+
+        if (!is_bool($self_enclosed))
+            throw new \InvalidArgumentException('Expected $self_enclosed to be string, got ' . Util::getType($self_enclosed));
+
         $this->name = $name;
         $this->self_enclosed = $self_enclosed;
     }
 
     public function addAttribute($name, $value = null)
     {
+        if (!is_string($name))
+            throw new \InvalidArgumentException('Expected $name to be string, got ' . Util::getType($name));
+
+        if ($value === null)
+            $value = $name;
+
+        if (!is_string($value))
+            throw new \InvalidArgumentException('Expected $value to be string, got ' . Util::getType($value));
+
         $this->attributes[] = ['name' => $name, 'value' => $value];
+    }
+
+    public function setInnerText($text) {
+        if ($this->self_enclosed)
+            throw new \RuntimeException('Cannot set inner text on self enclosed tag');
+
+        if (!is_string($text))
+            throw new \InvalidArgumentException('Expected $text to be string, got ' . Util::getType($text));
+
+        $this->inner = $text;
     }
 
     public function render()
@@ -51,6 +79,9 @@ class HtmlTag
         }, $this->attributes));
 
         printf('<%s %s>', $this->name, $attributes_str);
+
+        if ($this->inner !== null)
+            print($this->inner);
 
         if (!$this->self_enclosed)
             printf('</%s>', $this->name);

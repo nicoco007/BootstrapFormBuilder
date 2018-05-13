@@ -129,7 +129,7 @@ var BootstrapFormBuilder = {
 
                         console.log($group);
 
-                        $group.find('.form-control:first, .custom-control-label:last').after('<div class="invalid-feedback d-block">' + error + '</div>');
+                        $group.find('.form-control:first, .custom-control:last').after('<div class="invalid-feedback d-block">' + error + '</div>');
                     }
                 } else if (json['error']) {
                     if (json['error']['message']) {
