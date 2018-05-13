@@ -19,11 +19,24 @@
 namespace FormBuilder\Controls;
 
 
+use FormBuilder\Translations;
+
 class EmailControl extends InputControl
 {
     public function renderContents()
     {
         printf('<input type="email" class="%1$s" id="%2$s" name="%2$s" placeholder="%3$s" value="%4$s">', $this->getClasses(), $this->getName(), $this->getPlaceholder(), $this->getValue());
+    }
+
+    public function getErrorMessage()
+    {
+        if (parent::getErrorMessage() !== null)
+            return parent::getErrorMessage();
+
+        if (!filter_var($this->getValue(), FILTER_VALIDATE_EMAIL))
+            return Translations::translate("Please enter a valid email address.");
+
+        return null;
     }
 
     public function getType()
