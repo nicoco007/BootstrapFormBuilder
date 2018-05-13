@@ -78,7 +78,7 @@ var BootstrapFormBuilder = {
 
             data[$button.attr('name')] = $button.val();
 
-            $form.find('input, textarea').each(function () {
+            $form.find('input, textarea, select').each(function () {
                 var $input = $(this);
                 var $group = $input.parents('.form-group');
 
@@ -127,7 +127,9 @@ var BootstrapFormBuilder = {
 
                         $element.addClass('is-invalid');
 
-                        $group.append('<div class="invalid-feedback d-block">' + error + '</div>');
+                        console.log($group);
+
+                        $group.find('.form-control:first, .custom-control-label:last').after('<div class="invalid-feedback d-block">' + error + '</div>');
                     }
                 } else if (json['error']) {
                     if (json['error']['message']) {
