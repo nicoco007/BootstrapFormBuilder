@@ -42,15 +42,29 @@ var BootstrapFormBuilder = {
 
             // initialize date/time pickers
             $form.find('.datetimepicker-date').each(function () {
-                var $element = $(this);
+                var $input = $(this);
+                var id = $input.attr('id');
+                var $inputGroup = $('<div class="input-group date" data-target-input="nearest" id="' + id + '-wrapper">');
 
-                var id = $element.find('input').attr('id');
-                $element.prepend('<div class="input-group-prepend"><button type="button" class="btn btn-primary" data-target="#' + id + '-wrapper" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></button></div>');
+                $inputGroup.append('<div class="input-group-prepend"><button type="button" class="btn btn-primary" data-target="#' + id + '-wrapper" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></button></div>');
 
-                $element.datetimepicker({
+                $input.after($inputGroup);
+                $input.remove();
+
+                $inputGroup.append($input);
+
+                var options = {
                     format: 'L',
-                    locale: $element.data('locale') || 'en'
-                })
+                    locale: $input.data('locale') || 'en'
+                };
+
+                if ($input.data('min-date'))
+                    options['minDate'] = new Date($input.data('min-date'));
+
+                if ($input.data('max-date'))
+                    options['maxDate'] = new Date($input.data('max-date'));
+
+                $inputGroup.datetimepicker(options);
             });
 
             $form.find('select').each(function () {
@@ -59,7 +73,7 @@ var BootstrapFormBuilder = {
                 var id = $input.attr('id') || $input.attr('name');
 
                 var $dropdown = $('<div class="dropdown bsfb-select">');
-                var $button = $('<button class="btn btn-light dropdown-toggle" type="button" id="' + id + '-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
+                var $button = $('<button class="btn btn-light dropdown-toggle form-control" type="button" id="' + id + '-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ref="' + id + '">');
                 var $buttonText = $('<span class="select-text"></span>');
                 var $buttonTextInner = $('<span class="select-text-inner"></span>');
                 var $menu = $('<div class="dropdown-menu" aria-labelledby="' + id + '-dropdown">');
@@ -162,12 +176,10 @@ var BootstrapFormBuilder = {
                         // noinspection JSUnfilteredForInLoop
                         var error = json['controlErrors'][key];
 
-                        var $element = $form.find('[name="' + key + '"]');
-                        var $group = $element.parents('.form-group');
+                        var $element = $form.find('[name="' + key + '"], [data-ref="' + key + '"]');
+                        var $group = $element.closest('.form-group');
 
                         $element.addClass('is-invalid');
-
-                        console.log($group);
 
                         $group.find('.form-control:first, .custom-control:last').after('<div class="invalid-feedback d-block">' + error + '</div>');
                     }

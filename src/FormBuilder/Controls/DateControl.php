@@ -19,6 +19,7 @@
 namespace FormBuilder\Controls;
 
 
+use FormBuilder\HtmlTag;
 use FormBuilder\Translations;
 use FormBuilder\Util;
 
@@ -41,14 +42,24 @@ class DateControl extends FormControl
 
         printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
 
-        printf('<div class="input-group datetimepicker-date" id="%s-wrapper" data-target-input="nearest" data-locale="%s">', $this->getName(), Util::getIETFLocale(LC_TIME));
+        $input = new HtmlTag('input', true);
 
-        printf(
-            '<input type="text" class="%1$s" id="%2$s" name="%2$s" data-target="#%1$s-wrapper" placeholder="%3$s" value="%4$s">',
-            $this->getClasses(), $this->getName(), Translations::translate('MM/DD/YYYY', 'date control string format'), $value
-        );
+        $input->addAttribute('type', 'text');
+        $input->addAttribute('class', $this->getClasses());
+        $input->addAttribute('id', $this->getName());
+        $input->addAttribute('name', $this->getName());
+        $input->addAttribute('data-target', '#' . $this->getName() . '-wrapper');
+        $input->addAttribute('placeholder', Translations::translate('MM/DD/YYYY', 'date control string format'));
+        $input->addAttribute('value', $value);
+        $input->addAttribute('locale', Util::getIETFLocale(LC_TIME)); // TODO: replace this with form language
 
-        print('</div>');
+        if ($this->minDate !== null)
+            $input->addAttribute('data-min-date', $this->minDate->format('Y-m-d'));
+
+        if ($this->maxDate !== null)
+            $input->addAttribute('data-max-date', $this->maxDate->format('Y-m-d'));
+
+        $input->render();
 
         if ($this->hasError())
             printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
@@ -74,10 +85,24 @@ class DateControl extends FormControl
 
     public function getErrorMessage()
     {
-        if (isset($_POST[$this->getName()]) && !Util::stringIsNullOrEmpty($_POST[$this->getName()]) && date_create($_POST[$this->getName()]) === false)
-            return Translations::translate('Please enter a valid date.');
+        if (parent::getErrorMessage())
+            return parent::getErrorMessage();
 
-        return parent::getErrorMessage();
+        if (isset($_POST[$this->getName()]) && !Util::stringIsNullOrEmpty($_POST[$this->getName()])) {
+            if (date_create($_POST[$this->getName()]) === false)
+                return Translations::translate('Please enter a valid date.');
+
+            /** @var \DateTime $date */
+            $date = $this->getValue();
+
+            if (($this->minDate !== null && $date < $this->minDate) || ($this->maxDate !== null && $date > $this->maxDate)) {
+                $minDateStr = $this->minDate->format(Translations::translate('m/d/Y', 'date control DateTime format'));
+                $maxDateStr = $this->maxDate->format(Translations::translate('m/d/Y', 'date control DateTime format'));
+                return sprintf(Translations::translate('Date must be between %s and %s.'), $minDateStr, $maxDateStr);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -101,7 +126,7 @@ class DateControl extends FormControl
 
     private function getClasses()
     {
-        $classes = ['form-control', 'datetimepicker-input', 'rounded-right'];
+        $classes = ['form-control', 'datetimepicker-input', 'datetimepicker-date'];
 
         if ($this->hasError())
             $classes[] = 'is-invalid';
@@ -114,6 +139,9 @@ class DateControl extends FormControl
      */
     public function setMinDate($minDate)
     {
+        if (!($minDate instanceof \DateTime))
+            throw new \InvalidArgumentException('Expected $minDate to be instance of DateTime, got ' . Util::getType($minDate));
+
         $this->minDate = $minDate;
     }
 
@@ -122,6 +150,9 @@ class DateControl extends FormControl
      */
     public function setMaxDate($maxDate)
     {
+        if (!($maxDate instanceof \DateTime))
+            throw new \InvalidArgumentException('Expected $maxDate to be instance of DateTime, got ' . Util::getType($maxDate));
+
         $this->maxDate = $maxDate;
     }
 }

@@ -46,6 +46,7 @@ $email_control = new EmailControl('Email Address', 'email');
 $password_control = new PasswordControl('Password', 'password');
 $checkbox = new CheckboxControl('Check this out', 'checkbox');
 $date = new DateControl('Pick a date', 'date');
+$date2 = new DateControl('Date with min/max', 'date2');
 $textarea = new TextAreaControl('Write something!', 'textarea');
 $radio = new RadioButtonControl('Choose one', 'radio');
 $select = new SelectControl('Select a thing', 'select');
@@ -75,6 +76,9 @@ $textarea->setRequired(true);
 $radio->setRequired(true);
 $select->setRequired(true);
 
+$date2->setMinDate((new DateTime())->sub(new DateInterval("P7D")));
+$date2->setMaxDate((new DateTime())->add(new DateInterval("P7D")));
+
 $radio->addOption('Option 1', 'opt1', ['key' => 'value']);
 $radio->addOption('Option 2', 'opt2', ['otherkey' => 'othervalue']);
 $radio->addOption('Option 3', 'opt3', ['an', 'array']);
@@ -95,7 +99,8 @@ $section1->addControl($text_control);
 $section1->addControl($email_control);
 $section1->addControl($password_control);
 $section1->addControl($checkbox);
-$section2->addControl($date);
+$section1->addControl($date);
+$section1->addControl($date2);
 $section2->addControl($textarea);
 $section2->addControl($radio);
 $section2->addControl($select);

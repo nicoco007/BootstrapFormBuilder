@@ -136,7 +136,7 @@ abstract class FormControl
 
     public final function hasError()
     {
-        return $this->getErrorMessage() !== null;
+        return $this->getParent()->isSubmitted() && $this->getErrorMessage() !== null;
     }
 
     public function getErrorMessage()
