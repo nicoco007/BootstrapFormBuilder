@@ -50,3 +50,32 @@
     display: none;
   }
 }
+
+.control-group {
+  .children {
+    padding-left: 2rem;
+
+    .child-message {
+      font-style: italic;
+      padding-bottom: 0.5rem;
+    }
+  }
+}
+
+.bsfb-form.js {
+  .control-group {
+    .children {
+      .child-message {
+        display: none;
+      }
+
+      .form-group[data-parent-value] {
+        display: none;
+
+        &.visible {
+          display: block;
+        }
+      }
+    }
+  }
+}

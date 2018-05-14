@@ -95,11 +95,11 @@ $select2->addOption('Option 1', 'opt1', ['something' => 'something else']);
 $select2->addOption('Option 2', 'opt2', ['something else' => 'something']);
 $select2->addOption('Option 3', 'opt3', ['not', 'an', 'associative', 'array'], true);
 
-$section1->addControl($text_control);
-$section1->addControl($email_control);
-$section1->addControl($password_control);
-$section1->addControl($checkbox);
-$section1->addControl($date);
+$radio->addChild($text_control, ['key' => 'value']);
+$radio2->addChild($email_control);
+$select->addChild($password_control);
+$select2->addChild($checkbox);
+$checkbox->addChild($date, true);
 $section1->addControl($date2);
 $section2->addControl($textarea);
 $section2->addControl($radio);
@@ -182,7 +182,7 @@ function parseVal($val)
         <ul>
             <?php
 
-            foreach ($form->getControls() as $control) {
+            foreach ($form->getControls(true) as $control) {
                 printf('<li>%s: %s</li>', $control->getName(), parseVal($control->getValue()));
             }
 

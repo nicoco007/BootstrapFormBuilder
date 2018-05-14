@@ -24,10 +24,8 @@ use FormBuilder\Util;
 
 class RadioButtonControl extends MultiOptionControl
 {
-    public function render()
+    public function renderControl()
     {
-        print('<div class="form-group">');
-
         printf('<label>%s</label>', $this->getLabel());
 
         foreach ($this->getOptions() as $option) {
@@ -52,14 +50,6 @@ class RadioButtonControl extends MultiOptionControl
 
             print('</div>');
         }
-
-        if ($this->hasError())
-            printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
-
-        if (!Util::stringIsNullOrEmpty($this->getHint()))
-            printf('<small class="form-text text-muted">%s</small>', $this->getHint());
-
-        print('</div>');
     }
 
     public function getType()

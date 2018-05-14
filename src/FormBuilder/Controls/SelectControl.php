@@ -21,14 +21,11 @@ namespace FormBuilder\Controls;
 
 use FormBuilder\HtmlTag;
 use FormBuilder\Translations;
-use FormBuilder\Util;
 
 class SelectControl extends MultiOptionControl
 {
-    public function render()
+    public function renderControl()
     {
-        print('<div class="form-group">');
-
         printf('<label>%s</label>', $this->getLabel());
 
         printf('<select class="%s" name="%s">', $this->getClasses(), $this->getName());
@@ -48,14 +45,6 @@ class SelectControl extends MultiOptionControl
         }
 
         print('</select>');
-
-        if ($this->hasError())
-            printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
-
-        if (!Util::stringIsNullOrEmpty($this->getHint()))
-            printf('<small class="form-text text-muted">%s</small>', $this->getHint());
-
-        print('</div>');
     }
 
     public function getType()

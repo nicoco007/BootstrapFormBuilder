@@ -24,9 +24,9 @@ use FormBuilder\Util;
 
 class CheckboxControl extends FormControl
 {
-    public function render()
+    public function renderControl()
     {
-        print('<div class="form-group"><div class="custom-control custom-checkbox">');
+        print('<div class="custom-control custom-checkbox">');
 
         $input_tag = new HtmlTag('input', true);
 
@@ -43,14 +43,11 @@ class CheckboxControl extends FormControl
         printf('<label class="custom-control-label" for="%s">%s</label>', $this->getName(), $this->getLabel());
 
         print('</div>');
+    }
 
-        if ($this->hasError())
-            printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
-
-        if (!Util::stringIsNullOrEmpty($this->getHint()))
-            printf('<small class="form-text text-muted">%s</small>', $this->getHint());
-
-        print('</div>');
+    protected function getValueKey($value)
+    {
+        return $value === true ? 'true' : 'false';
     }
 
     public function getType()
@@ -70,7 +67,7 @@ class CheckboxControl extends FormControl
 
     public function parseValueFromPost()
     {
-        if (isset($_POST[$this->getName()]) && $_POST[$this->getName()] == 'on')
+        if (isset($_POST[$this->getName()]) && $_POST[$this->getName()] === 'on')
             return true;
 
         return false;

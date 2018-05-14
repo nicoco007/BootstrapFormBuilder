@@ -28,6 +28,11 @@ abstract class MultiOptionControl extends FormControl
      */
     private $options = [];
 
+    /**
+     * @var ControlOption[]
+     */
+    private $hashes = [];
+
     /** @var bool */
     private $has_default;
 
@@ -55,7 +60,9 @@ abstract class MultiOptionControl extends FormControl
                 $this->has_default = true;
         }
 
-        $this->options[$key] = new ControlOption($label, $key, $value, $is_default);
+        $co = new ControlOption($label, $key, $value, $is_default);
+        $this->options[$key] = $co;
+        $this->hashes[sha1(serialize($value))] = $co;
     }
 
     /**
@@ -63,9 +70,6 @@ abstract class MultiOptionControl extends FormControl
      */
     protected function getSubmittedKey()
     {
-        if (!$this->getParent()->isSubmitted())
-            return null;
-
         if (!isset($_POST[$this->getName()]) || Util::stringIsNullOrEmpty($_POST[$this->getName()]))
             return null;
 
@@ -104,5 +108,15 @@ abstract class MultiOptionControl extends FormControl
     protected function hasDefault()
     {
         return $this->has_default;
+    }
+
+    protected function getValueKey($value)
+    {
+        return $this->hashes[sha1(serialize($value))]->getKey();
+    }
+
+    protected function getValueLabel($value)
+    {
+        return $this->hashes[sha1(serialize($value))]->getLabel();
     }
 }

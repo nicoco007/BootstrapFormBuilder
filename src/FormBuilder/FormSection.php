@@ -52,12 +52,6 @@ class FormSection
         print('</fieldset>');
     }
 
-    public function init()
-    {
-        foreach ($this->controls as $control)
-            $control->init();
-    }
-
     /**
      * @param Controls\FormControl $control
      */
@@ -83,7 +77,7 @@ class FormSection
             throw new \InvalidArgumentException('Expected $control to be instance of Form, got ' . Util::getType($parent));
 
         foreach ($this->controls as $control)
-            $control->setParent($parent);
+            $control->setParentForm($parent);
 
         $this->parent = $parent;
     }

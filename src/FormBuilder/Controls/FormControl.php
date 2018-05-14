@@ -20,6 +20,7 @@ namespace FormBuilder\Controls;
 
 
 use FormBuilder\Form;
+use FormBuilder\HtmlTag;
 use FormBuilder\Translations;
 use FormBuilder\Util;
 
@@ -35,9 +36,9 @@ abstract class FormControl
     private $value;
 
     /** @var string */
-    private $raw_value;
+    private $rawValue;
 
-    /** @var Form */
+    /** @var FormControl */
     private $parent;
 
     /** @var bool */
@@ -45,6 +46,15 @@ abstract class FormControl
 
     /** @var string */
     private $hint;
+
+    /** @var FormControl[] */
+    private $children = [];
+
+    /** @var mixed */
+    private $requiredParentValue;
+
+    /** @var Form */
+    private $parentForm;
 
     /**
      * FormControl constructor.
@@ -63,7 +73,55 @@ abstract class FormControl
         $this->name = trim($name);
     }
 
-    public abstract function render();
+    public function render()
+    {
+        print('<div class="control-group">');
+
+        $tag = new HtmlTag('div', true);
+        $tag->addAttribute('class', 'form-group');
+
+        if ($this->requiredParentValue) {
+            $tag->addAttribute('data-parent', $this->parent->getName());
+            $tag->addAttribute('data-parent-value', $this->parent->getValueKey($this->getRequiredParentValue()));
+        }
+
+        $tag->render();
+
+        if ($this->requiredParentValue) {
+            print('<div class="child-message">');
+
+            if ($this->parent instanceof CheckboxControl && $this->requiredParentValue == true)
+                print(Translations::translate('If you checked the box above:'));
+            elseif ($this->parent instanceof CheckboxControl && $this->requiredParentValue == false)
+                print(Translations::translate('If you did not check the box above:'));
+            elseif ($this->parent instanceof RadioButtonControl)
+                printf(Translations::translate('If you selected "%s" above:'), $this->parent->getValueLabel($this->getRequiredParentValue()));
+            else
+                printf(Translations::translate('If you entered "%s" above:'), $this->parent->getValueLabel($this->getRequiredParentValue()));
+
+            print('</div>');
+        }
+
+        $this->renderControl();
+
+        if ($this->hasError())
+            printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
+
+        if (!Util::stringIsNullOrEmpty($this->getHint()))
+            printf('<small class="form-text text-muted">%s</small>', $this->getHint());
+
+        print('</div>');
+
+        print('<div class="children">');
+
+        foreach ($this->children as $child)
+            $child->render();
+
+        print('</div>');
+        print('</div>');
+    }
+
+    public abstract function renderControl();
 
     public abstract function getType();
 
@@ -136,43 +194,61 @@ abstract class FormControl
 
     public final function hasError()
     {
-        return $this->getParent()->isSubmitted() && $this->getErrorMessage() !== null;
+        return $this->parentForm->isSubmitted() && ($this->parent === null || $this->requiredParentValue === null || $this->parent->getValue() === $this->requiredParentValue) && $this->getErrorMessage() !== null;
     }
 
     public function getErrorMessage()
     {
-        if ($this->parent->isSubmitted() && $this->isRequired() && ($this->getValue() === null || $this->getValue() === false))
+        if ($this->isRequired() && ($this->getValue() === null || $this->getValue() === false))
             return Translations::translate('This field is required.');
 
         return null;
     }
 
     /**
-     * @param Form $parent
+     * @param FormControl $parent
      */
     public final function setParent($parent)
     {
-        if (!($parent instanceof Form))
-            throw new \InvalidArgumentException('Expected $parent to be instance of Form, got ' . Util::getType($parent));
+        if (!($parent instanceof FormControl))
+            throw new \InvalidArgumentException('Expected $parent to be instance of FormControl, got ' . Util::getType($parent));
 
         $this->parent = $parent;
     }
 
-    public final function init() {
-        if ($this->parent->isSubmitted()) {
+    public final function init()
+    {
+        if ($this->parentForm->isSubmitted()) {
             if (isset($_POST[$this->getName()]))
-                $this->raw_value = $_POST[$this->getName()];
+                $this->rawValue = $_POST[$this->getName()];
 
             $this->value = $this->parseValueFromPost();
         }
+
+        foreach ($this->children as $child)
+            $child->init();
     }
 
     /**
-     * @return Form
+     * @return FormControl
      */
     public final function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * @param Form $parentForm
+     */
+    public function setParentForm($parentForm)
+    {
+        if (!($parentForm instanceof Form))
+            throw new \InvalidArgumentException('Expected $parentForm to be instance of Form, got ' . Util::getType($parentForm));
+
+        foreach ($this->children as $child)
+            $child->setParentForm($parentForm);
+
+        $this->parentForm = $parentForm;
     }
 
     /**
@@ -195,10 +271,69 @@ abstract class FormControl
     }
 
     /**
+     * @param FormControl $child
+     * @param mixed $requiredValue
+     */
+    public function addChild($child, $requiredValue = null)
+    {
+        $child->setParent($this);
+        $child->setRequiredParentValue($requiredValue);
+
+        $this->children[] = $child;
+    }
+
+    /**
+     * @param bool $deep
+     * @return FormControl[]
+     */
+    public function getChildren($deep = false)
+    {
+        $controls = $this->children;
+
+        if ($deep)
+            foreach ($this->children as $child)
+                $controls += $child->getChildren(true);
+
+        return $controls;
+    }
+
+    /**
+     * @param mixed $requiredParentValue
+     */
+    protected function setRequiredParentValue($requiredParentValue)
+    {
+        $this->requiredParentValue = $requiredParentValue;
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    protected function getValueKey($value) {
+        return strval($value);
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    protected function getValueLabel($value) {
+        return strval($value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequiredParentValue()
+    {
+        return $this->requiredParentValue;
+    }
+
+    /**
      * @return string
      */
     protected final function getRawValue()
     {
-        return $this->raw_value;
+        return $this->rawValue;
     }
 }

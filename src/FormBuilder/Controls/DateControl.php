@@ -34,11 +34,9 @@ class DateControl extends FormControl
     /** @var \DateTime */
     private $maxDate;
 
-    public function render()
+    public function renderControl()
     {
         $value = $this->getValue() !== null ? $this->getValue()->format(Translations::translate('m/d/Y', 'date control DateTime format')) : $this->getRawValue();
-
-        print('<div class="form-group">');
 
         printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
 
@@ -60,14 +58,6 @@ class DateControl extends FormControl
             $input->addAttribute('data-max-date', $this->maxDate->format('Y-m-d'));
 
         $input->render();
-
-        if ($this->hasError())
-            printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
-
-        if (!Util::stringIsNullOrEmpty($this->getHint()))
-            printf('<small class="form-text text-muted">%s</small>', $this->getHint());
-
-        print('</div>');
     }
 
     public function getType()

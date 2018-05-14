@@ -32,21 +32,11 @@ abstract class InputControl extends FormControl
 
     abstract function renderContents();
 
-    public final function render()
+    public final function renderControl()
     {
-        print('<div class="form-group">');
-
         printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
 
         $this->renderContents();
-
-        if ($this->hasError())
-            printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
-
-        if (!Util::stringIsNullOrEmpty($this->getHint()))
-            printf('<small class="form-text text-muted">%s</small>', $this->getHint());
-
-        print('</div>');
     }
 
     protected function getClasses()

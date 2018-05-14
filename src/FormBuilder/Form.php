@@ -65,7 +65,7 @@ class Form
         if (!isset($this->has_submit_button))
             array_unshift($this->buttons, new SubmitButton());
 
-        foreach ($this->getControls() as $control)
+        foreach ($this->getControls(true) as $control)
             $control->init();
 
         if ($this->isSubmitted()) {
@@ -74,7 +74,7 @@ class Form
             $error = null;
 
             if (!$this->hasError()) {
-                $controls = $this->getControls();
+                $controls = $this->getControls(true);
 
                 try {
                     $this->response = $submit_button->submitCallback($controls);
@@ -89,7 +89,7 @@ class Form
             if ($this->isAjaxSubmit()) {
                 $this->printJsonData($error);
             } else {
-                if ($this->response->getRedirectUrl() !== null)
+                if ($this->response !== null && $this->response->getRedirectUrl() !== null)
                     header('Location: ' . $this->response->getRedirectUrl());
             }
         }
@@ -149,26 +149,32 @@ class Form
         if (isset($this->controls[$control->getName()]))
             throw new \InvalidArgumentException(sprintf('A button with the name "%s" was already added', $control->getName()));
 
-        $control->setParent($this);
+        $control->setParentForm($this);
 
         $this->controls[$control->getName()] = $control;
     }
 
     /**
+     * @param bool $deep
      * @return Controls\FormControl[]
      */
-    public function getControls()
+    public function getControls($deep = false)
     {
-        if (count($this->sections) > 0) {
-            $controls = [];
+        /** @var Controls\FormControl[] $controls */
+        $controls = [];
 
+        if (count($this->sections) > 0) {
             foreach ($this->sections as $section)
                 $controls += $section->getControls();
-
-            return $controls;
         } else {
-            return $this->controls;
+            $controls = $this->controls;
         }
+
+        if ($deep)
+            foreach ($controls as $control)
+                $controls += $control->getChildren(true);
+
+        return $controls;
     }
 
     /**
@@ -235,15 +241,17 @@ class Form
      */
     public function hasError()
     {
-        if (count($this->sections) > 0) {
-            foreach ($this->sections as $section)
-                foreach ($section->getControls() as $control)
+        if ($this->isSubmitted()) {
+            if (count($this->sections) > 0) {
+                foreach ($this->sections as $section)
+                    foreach ($section->getControls() as $control)
+                        if ($control->hasError())
+                            return true;
+            } else {
+                foreach ($this->controls as $control)
                     if ($control->hasError())
                         return true;
-        } else {
-            foreach ($this->controls as $control)
-                if ($control->hasError())
-                    return true;
+            }
         }
 
         return false;
@@ -294,19 +302,9 @@ class Form
             ];
         }
 
-        if (count($this->sections) > 0) {
-            foreach ($this->sections as $section) {
-                foreach ($section->getControls() as $control) {
-                    if ($control->hasError())
-                        $data['controlErrors'][$control->getName()] = $control->getErrorMessage();
-                }
-            }
-        } else {
-            foreach ($this->controls as $control) {
-                if ($control->hasError())
-                    $data['controlErrors'][$control->getName()] = $control->getErrorMessage();
-            }
-        }
+        foreach ($this->getControls(true) as $control)
+            if ($control->hasError())
+                $data['controlErrors'][$control->getName()] = $control->getErrorMessage();
 
         header('Content-Type: application/json');
         print(json_encode($data));

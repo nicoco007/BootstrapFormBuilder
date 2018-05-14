@@ -50,10 +50,7 @@ class HtmlTag
         if (!is_string($name))
             throw new \InvalidArgumentException('Expected $name to be string, got ' . Util::getType($name));
 
-        if ($value === null)
-            $value = $name;
-
-        if (!is_string($value))
+        if (!Util::stringIsNullOrEmpty($value) && !is_string($value))
             throw new \InvalidArgumentException('Expected $value to be string, got ' . Util::getType($value));
 
         $this->attributes[] = ['name' => $name, 'value' => $value];

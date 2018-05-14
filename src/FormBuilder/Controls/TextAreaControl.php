@@ -19,27 +19,15 @@
 namespace FormBuilder\Controls;
 
 
-use FormBuilder\Util;
-
 class TextAreaControl extends FormControl
 {
     private $placeholder;
 
-    function render()
+    function renderControl()
     {
-        print('<div class="form-group">');
-
         printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
 
         printf('<textarea class="%1$s" id="%2$s" name="%2$s" placeholder="%3$s">%4$s</textarea>', $this->getClasses(), $this->getName(), $this->getPlaceholder(), $this->getValue());
-
-        if ($this->hasError())
-            printf('<div class="invalid-feedback d-block">%s</div>', $this->getErrorMessage());
-
-        if (!Util::stringIsNullOrEmpty($this->getHint()))
-            printf('<small class="form-text text-muted">%s</small>', $this->getHint());
-
-        print('</div>');
     }
 
     public function getPlaceholder()

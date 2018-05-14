@@ -24,6 +24,8 @@ var BootstrapFormBuilder = {
         $('.bsfb-form').each(function () {
             var $form = $(this);
 
+            $form.addClass('js');
+
             $form.find('[type="submit"]').on('click', function () {
                 $(this).attr('clicked', 'true');
             });
@@ -69,6 +71,26 @@ var BootstrapFormBuilder = {
 
             $form.find('select').each(function () {
                 self.dropdownSelect($(this));
+            });
+
+            $form.find('[data-parent-value]').each(function () {
+                var $child = $(this);
+                var $target = $('[name="' + $child.data('parent') + '"]');
+                var parentValue = $child.data('parent-value');
+
+                $target.on('change', function () {
+                    var value = $target.val();
+
+                    if ($target.attr('type') === 'checkbox')
+                        value = $target.prop('checked');
+                    else if ($target.attr('type') === 'radio')
+                        value = $target.filter(':checked').val();
+
+                    if (value === parentValue)
+                        $child.addClass('visible');
+                    else
+                        $child.removeClass('visible');
+                }).trigger('change');
             });
         });
     },
