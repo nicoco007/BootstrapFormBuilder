@@ -199,7 +199,7 @@ var BootstrapFormBuilder = {
 
         data[$button.attr('name')] = $button.val();
 
-        $form.find('input, textarea, select, button').each(function () {
+        $form.find('input, textarea, select, button[type="button"]').each(function () {
             var $input = $(this);
             var $group = $input.parents('.form-group');
 
