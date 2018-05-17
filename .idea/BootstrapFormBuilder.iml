@@ -5,6 +5,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/FormBuilder" isTestSource="false" packagePrefix="FormBuilder\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/giggsey/libphonenumber-for-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/giggsey/locale" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/version" />
@@ -44,5 +46,6 @@
     <orderEntry type="library" name="fr-ca" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="jquery.form" level="application" />
+    <orderEntry type="library" name="intlTelInput" level="application" />
   </component>
 </module>

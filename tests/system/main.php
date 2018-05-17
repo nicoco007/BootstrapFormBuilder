@@ -23,6 +23,7 @@ use FormBuilder\Controls\CheckboxControl;
 use FormBuilder\Controls\DateControl;
 use FormBuilder\Controls\EmailControl;
 use FormBuilder\Controls\PasswordControl;
+use FormBuilder\Controls\PhoneNumberControl;
 use FormBuilder\Controls\RadioButtonControl;
 use FormBuilder\Controls\SelectControl;
 use FormBuilder\Controls\TextAreaControl;
@@ -52,6 +53,7 @@ $radio = new RadioButtonControl('Choose one', 'radio');
 $select = new SelectControl('Select a thing', 'select');
 $radio2 = new RadioButtonControl('Radio with default', 'radio2');
 $select2 = new SelectControl('Select with default', 'select2');
+$tel = new PhoneNumberControl('Phone number', 'tel');
 
 $text_control->setPlaceholder('Enter name');
 $email_control->setPlaceholder('Enter email');
@@ -96,16 +98,17 @@ $select2->addOption('Option 2', 'opt2', ['something else' => 'something']);
 $select2->addOption('Option 3', 'opt3', ['not', 'an', 'associative', 'array'], true);
 
 $radio->addChild($text_control, ['key' => 'value']);
-$radio2->addChild($email_control);
+$radio->addChild($email_control, ['otherkey' => 'othervalue']);
 $select->addChild($password_control);
 $select2->addChild($checkbox);
 $checkbox->addChild($date, true);
 $section1->addControl($date2);
-$section2->addControl($textarea);
-$section2->addControl($radio);
+$section1->addControl($textarea);
+$section1->addControl($radio);
 $section2->addControl($select);
 $section2->addControl($radio2);
 $section2->addControl($select2);
+$section2->addControl($tel);
 
 $form->addSection($section1);
 $form->addSection($section2);
@@ -166,6 +169,8 @@ function parseVal($val)
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css"
           integrity="sha256-sJQnfQcpMXjRFWGNJ9/BWB1l6q7bkQYsRqToxoHlNJY=" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.15/css/intlTelInput.css"
+          integrity="sha256-Q35kn/SM+AW5mosKvh9cdofWZ2XZQECPFULVWv4LB6U=" crossorigin="anonymous"/>
     <link rel="stylesheet" href="../../dist/css/style.min.css"/>
 </head>
 <body>
@@ -205,6 +210,10 @@ function parseVal($val)
         integrity="sha256-xaF9RpdtRxzwYMWg4ldJoyPWqyDPCRD0Cv7YEEe6Ie8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha18/js/tempusdominus-bootstrap-4.min.js"
         integrity="sha256-8De73E/55v3s1x7gSEQ4pqpp+YgzggqakxdeXVsIjE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.15/js/intlTelInput.min.js"
+        integrity="sha256-DU7VFVkQvkOiAFq6ovT5dnQFcZVeXnFnfmTVirFCsAw=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.15/js/utils.js"
+        integrity="sha256-+iMZzfetfvKzWUvuUAGnNmowUrc1d11Y+JWx1cHfI8Y=" crossorigin="anonymous"></script>
 <script src="../../dist/js/script.min.js"></script>
 </body>
 </html>

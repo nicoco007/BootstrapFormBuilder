@@ -92,6 +92,20 @@ var BootstrapFormBuilder = {
                         $child.removeClass('visible');
                 }).trigger('change');
             });
+
+            $form.find('input[type="tel"]').each(function () {
+                var $input = $(this);
+
+                var countries = ['US', 'CA'];
+
+                if ($input.data('pref-countries'))
+                    countries = $input.data('pref-countries').split(',');
+
+                $input.intlTelInput({
+                    initialCountry: $input.data('initial-country') || 'US',
+                    preferredCountries: countries
+                });
+            });
         });
     },
     dropdownSelect: function ($input) {
@@ -205,7 +219,10 @@ var BootstrapFormBuilder = {
 
                         $element.addClass('is-invalid');
 
-                        $group.find('.form-control:first, .custom-control:last').after('<div class="invalid-feedback d-block">' + error + '</div>');
+                        // put outside input group if it exists, then try after the form control, then after the last
+                        // custom control (checkbox or radio)
+                        $group.find('.input-group:first, .form-control:first, .custom-control:last')
+                            .first().after('<div class="invalid-feedback d-block">' + error + '</div>');
                     }
                 } else if (json['error']) {
                     if (json['error']['message']) {
