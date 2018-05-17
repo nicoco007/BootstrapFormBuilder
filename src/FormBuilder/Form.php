@@ -67,15 +67,13 @@ class Form
 
     public function init()
     {
+        $all_controls = $this->getControls();
+
         if (!isset($this->has_submit_button))
             array_unshift($this->buttons, new SubmitButton());
 
-        foreach ($this->getControls(true) as $control) {
-            if (isset($this->getControls(true)[$control->getName()]) && $this->getControls(true)[$control->getName()] !== $control)
-                throw new \InvalidArgumentException(sprintf('A control with the name "%s" was already added', $control->getName()));
-
+        foreach ($all_controls as $control)
             $control->init();
-        }
 
         if ($this->isSubmitted()) {
             /** @var SubmitButton $submit_button */
@@ -83,10 +81,8 @@ class Form
             $error = null;
 
             if (!$this->hasError()) {
-                $controls = $this->getControls(true);
-
                 try {
-                    $this->response = $submit_button->submitCallback($controls);
+                    $this->response = $submit_button->submitCallback($all_controls);
                     $submit_button->successCallback();
                 } catch (\Exception $ex) {
                     $error = $ex;
@@ -176,15 +172,30 @@ class Form
         $controls = [];
 
         if (count($this->sections) > 0) {
-            foreach ($this->sections as $section)
-                $controls += $section->getControls();
+            foreach ($this->sections as $section) {
+                $temp = $section->getControls();
+                $intersect = array_intersect_key($controls, $temp);
+
+                if (count($intersect) > 0)
+                    throw new \RuntimeException('Control with name "' . array_keys($intersect)[0] . '" present more than once');
+                else
+                    $controls += $temp;
+            }
         } else {
             $controls = $this->controls;
         }
 
-        if ($deep)
-            foreach ($controls as $control)
-                $controls += $control->getChildren(true);
+        if ($deep) {
+            foreach ($controls as $control) {
+                $temp = $control->getChildren();
+                $intersect = array_intersect_key($controls, $temp);
+
+                if (count($intersect) > 0)
+                    throw new \RuntimeException('Control with name "' . array_keys($intersect)[0] . '" present more than once');
+                else
+                    $controls += $temp;
+            }
+        }
 
         return $controls;
     }

@@ -276,10 +276,13 @@ abstract class FormControl
      */
     public function addChild($child, $requiredValue = null)
     {
+        if (!($child instanceof FormControl))
+            throw new \InvalidArgumentException('Expected $child to be instance of FormControl, got ' . Util::getType($child));
+
         $child->setParent($this);
         $child->setRequiredParentValue($requiredValue);
 
-        $this->children[] = $child;
+        $this->children[$child->getName()] = $child;
     }
 
     /**
@@ -290,9 +293,17 @@ abstract class FormControl
     {
         $controls = $this->children;
 
-        if ($deep)
-            foreach ($this->children as $child)
-                $controls += $child->getChildren(true);
+        if ($deep) {
+            foreach ($this->children as $child) {
+                $temp = $child->getChildren();
+                $intersect = array_intersect_key($controls, $temp);
+
+                if (count($intersect) > 0)
+                    throw new \RuntimeException('Control with name "' . array_keys($intersect)[0] . '" present more than once');
+                else
+                    $controls += $temp;
+            }
+        }
 
         return $controls;
     }

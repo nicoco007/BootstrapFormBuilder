@@ -43,7 +43,7 @@ $section1 = new FormSection('Section I');
 $section2 = new FormSection('Section II');
 
 $text_control = new TextControl('Name', 'name');
-$text2 = new TextControl('Name', 'name2');
+$text2 = new TextControl('Name', 'name');
 $email_control = new EmailControl('Email Address', 'email');
 $password_control = new PasswordControl('Password', 'password');
 $checkbox = new CheckboxControl('Check this out', 'checkbox');
@@ -184,6 +184,7 @@ function parseVal($val)
 <body>
 <div class="container">
     <h1>Test</h1>
+    <pre><?= json_encode($form->getControls(true)) ?></pre>
 
     <?php if (!empty($_POST)): ?>
         <h2>Raw POST Data</h2>
