@@ -1,0 +1,2 @@
+BootstrapFormBuilder.registerLocale("fr",{"An unexpected server-side error occured. Please try again later.":"Une erreur serveur inattendue s'est produite. Veuillez réessayer plus tard.","Form submitted successfully.":"Formulaire soumis.","Unable to submit form: ":"Impossible de soumettre le formulaire : "});
+//# sourceMappingURL=fr.js.map

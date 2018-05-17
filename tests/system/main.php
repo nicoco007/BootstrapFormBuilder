@@ -222,6 +222,7 @@ function parseVal($val)
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.15/js/utils.js"
         integrity="sha256-+iMZzfetfvKzWUvuUAGnNmowUrc1d11Y+JWx1cHfI8Y=" crossorigin="anonymous"></script>
 <script src="../../dist/js/script.min.js"></script>
+<script src="../../dist/js/locale/fr.js"></script>
 </body>
 </html>
 
