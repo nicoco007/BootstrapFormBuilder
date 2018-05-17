@@ -63,16 +63,18 @@ class PhoneNumberControl extends InputControl
         if (parent::getErrorMessage())
             return parent::getErrorMessage();
 
-        $phoneUtil = PhoneNumberUtil::getInstance();
-        $value = $this->getValue();
+        if ($this->getValue() !== null) {
+            $phoneUtil = PhoneNumberUtil::getInstance();
+            $value = $this->getValue();
 
-        try {
-            $proto = $phoneUtil->parse($value, 'CA');
+            try {
+                $proto = $phoneUtil->parse($value, 'CA');
 
-            if (!$phoneUtil->isValidNumber($proto))
-                return Translations::translate('Please enter a valid phone number.');
-        } catch (NumberParseException $ex) {
-            return Translations::translate('Could not parse phone number. Please try again.');
+                if (!$phoneUtil->isValidNumber($proto))
+                    return Translations::translate('Please enter a valid phone number.');
+            } catch (NumberParseException $ex) {
+                return Translations::translate('Could not parse phone number. Please try again.');
+            }
         }
 
         return null;
