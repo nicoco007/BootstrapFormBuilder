@@ -22,6 +22,9 @@ namespace FormBuilder;
 class Form
 {
     /** @var string */
+    private $title;
+
+    /** @var string */
     private $id;
 
     /** @var string */
@@ -50,11 +53,13 @@ class Form
 
     /**
      * Form constructor.
+     * @param string $title
      * @param string $method GET or POST
-     * @param string $id Form ID (useful when there are multiple forms on a single page)
+     * @param string $id Form ID (important when there are multiple forms on a single page)
      */
-    public function __construct($method = 'GET', $id = null)
+    public function __construct($title = 'Form', $method = 'GET', $id = null)
     {
+        $this->title = $title;
         $this->method = $method;
         $this->controls = [];
         $this->buttons = [];
@@ -103,6 +108,9 @@ class Form
             throw new \RuntimeException('Form::init must be called before rendering');
 
         printf('<form method="%s" class="bsfb-form">', $this->method);
+
+        if ($this->title !== null)
+            printf('<div class="form-title">%s</div>', $this->title);
 
         if ($this->response !== null)
             printf('<div class="alert alert-%s">%s</div>', $this->response->getClass(), $this->response->getMessage());

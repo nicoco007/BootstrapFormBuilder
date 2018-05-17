@@ -41,7 +41,7 @@ class FormSection
 
     public function render()
     {
-        printf('<h3>%s</h3>', $this->label);
+        printf('<div class="form-section-title">%s</div>', $this->label);
 
         print('<fieldset>');
 

@@ -37,7 +37,7 @@ use FormBuilder\SuccessResponse;
 
 setlocale(LC_ALL, 'fr_ca');
 
-$form = new Form('post');
+$form = new Form('Form', 'post');
 
 $section1 = new FormSection('Section I');
 $section2 = new FormSection('Section II');
@@ -198,7 +198,6 @@ function parseVal($val)
         </ul>
     <?php endif; ?>
 
-    <h2>Form</h2>
     <?php $form->render(); ?>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
