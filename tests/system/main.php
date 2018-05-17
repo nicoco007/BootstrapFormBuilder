@@ -184,7 +184,6 @@ function parseVal($val)
 <body>
 <div class="container">
     <h1>Test</h1>
-    <pre><?= json_encode($form->getControls(true)) ?></pre>
 
     <?php if (!empty($_POST)): ?>
         <h2>Raw POST Data</h2>
