@@ -221,7 +221,7 @@ var BootstrapFormBuilder = {
 
                         // put outside input group if it exists, then try after the form control, then after the last
                         // custom control (checkbox or radio)
-                        $group.find('.input-group:first, .form-control:first, .custom-control:last')
+                        $group.find('.input-group, .form-control, .custom-control:last')
                             .first().after('<div class="invalid-feedback d-block">' + error + '</div>');
                     }
                 } else if (json['error']) {
