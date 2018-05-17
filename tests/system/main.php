@@ -97,6 +97,9 @@ $select2->addOption('Option 1', 'opt1', ['something' => 'something else']);
 $select2->addOption('Option 2', 'opt2', ['something else' => 'something']);
 $select2->addOption('Option 3', 'opt3', ['not', 'an', 'associative', 'array'], true);
 
+$tel->setInitialCountry('CA');
+$tel->setPreferredCountries(['CA', 'US']);
+
 $radio->addChild($text_control, ['key' => 'value']);
 $radio->addChild($email_control, ['otherkey' => 'othervalue']);
 $select->addChild($password_control);

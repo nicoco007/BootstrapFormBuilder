@@ -19,17 +19,36 @@
 namespace FormBuilder\Controls;
 
 
+use FormBuilder\HtmlTag;
 use FormBuilder\Translations;
+use FormBuilder\Util;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 
 class PhoneNumberControl extends InputControl
 {
+    private $initialCountry;
+    private $preferredCountries;
+
     function renderContents()
     {
         print('<div class="input-group">'); // to avoid issues with intl-tel-input
 
-        printf('<input class="form-control" type="tel" name="%s" value="%s">', $this->getName(), $this->getValue());
+        $input = new HtmlTag('input', true);
+
+        $input->addAttribute('class', $this->getClasses());
+        $input->addAttribute('type', 'tel');
+        $input->addAttribute('id', $this->getName());
+        $input->addAttribute('name', $this->getName());
+        $input->addAttribute('value', $this->getValue());
+
+        if ($this->initialCountry !== null)
+            $input->addAttribute('data-initial-country', $this->initialCountry);
+
+        if (count($this->preferredCountries) > 0)
+            $input->addAttribute('data-pref-countries', implode(',', $this->preferredCountries));
+
+        $input->render();
 
         print('</div>');
     }
@@ -49,6 +68,7 @@ class PhoneNumberControl extends InputControl
 
         try {
             $proto = $phoneUtil->parse($value, 'CA');
+
             if (!$phoneUtil->isValidNumber($proto))
                 return Translations::translate('Please enter a valid phone number.');
         } catch (NumberParseException $ex) {
@@ -56,5 +76,27 @@ class PhoneNumberControl extends InputControl
         }
 
         return null;
+    }
+
+    /**
+     * @param mixed $initialCountry
+     */
+    public function setInitialCountry($initialCountry)
+    {
+        if (!is_string($initialCountry))
+            throw new \InvalidArgumentException('Expected $initialCountry to be an array, got ' . Util::getType($initialCountry));
+
+        $this->initialCountry = $initialCountry;
+    }
+
+    /**
+     * @param mixed $preferredCountries
+     */
+    public function setPreferredCountries($preferredCountries)
+    {
+        if (!is_array($preferredCountries))
+            throw new \InvalidArgumentException('Expected $preferredCountries to be an array, got ' . Util::getType($preferredCountries));
+
+        $this->preferredCountries = $preferredCountries;
     }
 }
