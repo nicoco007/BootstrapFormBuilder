@@ -45,9 +45,8 @@ class FormSection
 
         print('<fieldset>');
 
-        foreach ($this->controls as $control) {
+        foreach ($this->controls as $control)
             $control->render();
-        }
 
         print('</fieldset>');
     }

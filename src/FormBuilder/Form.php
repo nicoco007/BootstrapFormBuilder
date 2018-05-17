@@ -70,8 +70,12 @@ class Form
         if (!isset($this->has_submit_button))
             array_unshift($this->buttons, new SubmitButton());
 
-        foreach ($this->getControls(true) as $control)
+        foreach ($this->getControls(true) as $control) {
+            if (isset($this->getControls(true)[$control->getName()]) && $this->getControls(true)[$control->getName()] !== $control)
+                throw new \InvalidArgumentException(sprintf('A control with the name "%s" was already added', $control->getName()));
+
             $control->init();
+        }
 
         if ($this->isSubmitted()) {
             /** @var SubmitButton $submit_button */
@@ -155,7 +159,7 @@ class Form
             throw new InvalidOperationException('Cannot add controls to form with sections');
 
         if (isset($this->controls[$control->getName()]))
-            throw new \InvalidArgumentException(sprintf('A button with the name "%s" was already added', $control->getName()));
+            throw new \InvalidArgumentException(sprintf('A control with the name "%s" was already added', $control->getName()));
 
         $control->setParentForm($this);
 
