@@ -15,54 +15,56 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-.bsfb-select {
-  width: 100%;
-
-  .intl-tel-input {
+.bsfb-form {
+  .bsfb-select {
     width: 100%;
+
+    & > .dropdown-toggle {
+      width: 100%;
+      position: relative;
+      text-align: right;
+      white-space: nowrap;
+
+      & > .select-text {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        display: inline-block;
+        padding: inherit;
+        text-align: left;
+
+        & > .select-text-inner {
+          width: 100%;
+          display: inline-block;
+          padding-right: inherit;
+        }
+      }
+    }
+
+    & > .dropdown-menu {
+      width: 100%;
+    }
+
+    select {
+      display: none;
+    }
   }
 
-  & > .dropdown-toggle {
-    width: 100%;
-    position: relative;
-    text-align: right;
-    white-space: nowrap;
+  .control-group {
+    .children {
+      padding-left: 2rem;
 
-    & > .select-text {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      display: inline-block;
-      padding: inherit;
-      text-align: left;
-
-      & > .select-text-inner {
-        width: 100%;
-        display: inline-block;
-        padding-right: inherit;
+      .child-message {
+        font-style: italic;
+        padding-bottom: 0.5rem;
       }
     }
   }
 
-  & > .dropdown-menu {
+  .intl-tel-input {
     width: 100%;
-  }
-
-  select {
-    display: none;
-  }
-}
-
-.control-group {
-  .children {
-    padding-left: 2rem;
-
-    .child-message {
-      font-style: italic;
-      padding-bottom: 0.5rem;
-    }
   }
 }
 
