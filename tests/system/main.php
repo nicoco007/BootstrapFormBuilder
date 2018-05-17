@@ -43,6 +43,7 @@ $section1 = new FormSection('Section I');
 $section2 = new FormSection('Section II');
 
 $text_control = new TextControl('Name', 'name');
+$text2 = new TextControl('Name', 'name2');
 $email_control = new EmailControl('Email Address', 'email');
 $password_control = new PasswordControl('Password', 'password');
 $checkbox = new CheckboxControl('Check this out', 'checkbox');
@@ -100,6 +101,9 @@ $select2->addOption('Option 3', 'opt3', ['not', 'an', 'associative', 'array'], t
 $tel->setInitialCountry('CA');
 $tel->setPreferredCountries(['CA', 'US']);
 
+$text2->setMaxLength(6);
+$text2->setRegexString('/^[A-Z][0-9][A-Z] ?[0-9][A-Z][0-9]$/i');
+
 $radio->addChild($text_control, ['key' => 'value']);
 $radio->addChild($email_control, ['otherkey' => 'othervalue']);
 $select->addChild($password_control);
@@ -112,6 +116,7 @@ $section2->addControl($select);
 $section2->addControl($radio2);
 $section2->addControl($select2);
 $section2->addControl($tel);
+$section2->addControl($text2);
 
 $form->addSection($section1);
 $form->addSection($section2);

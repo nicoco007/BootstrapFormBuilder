@@ -19,15 +19,72 @@
 namespace FormBuilder\Controls;
 
 
+use FormBuilder\HtmlTag;
+use FormBuilder\Translations;
+use FormBuilder\Util;
+
 class TextControl extends InputControl
 {
+    private $regexString;
+    private $maxLength;
+
     public function renderContents()
     {
-        printf('<input type="text" class="%1$s" id="%2$s" name="%2$s" placeholder="%3$s" value="%4$s">', $this->getClasses(), $this->getName(), $this->getPlaceholder(), $this->getValue());
+        $input = new HtmlTag('input', true);
+
+        $input->addAttribute('type', 'text');
+        $input->addAttribute('class', $this->getClasses());
+        $input->addAttribute('id', $this->getName());
+        $input->addAttribute('name', $this->getName());
+        $input->addAttribute('placeholder', $this->getPlaceholder());
+        $input->addAttribute('value', $this->getValue());
+
+        if ($this->maxLength !== null)
+            $input->addAttribute('maxlength', strval($this->maxLength));
+
+        $input->render();
     }
 
     public function getType()
     {
         return 'text';
+    }
+
+    public function getErrorMessage()
+    {
+        if (parent::getErrorMessage())
+            return parent::getErrorMessage();
+
+        if ($this->getValue() !== null) {
+            if ($this->regexString !== null && preg_match($this->regexString, $this->getValue()) !== 1)
+                return Translations::translate('Please enter a valid value.');
+
+            if ($this->maxLength !== null && mb_strlen($this->getValue()) > $this->maxLength)
+                return sprintf(Translations::translate('Exceeded maximum length of %d characters.'), $this->maxLength);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param mixed $regexString
+     */
+    public function setRegexString($regexString)
+    {
+        if (!is_string($regexString))
+            throw new \InvalidArgumentException('Expected $regexString to be string, got ' . Util::getType($regexString));
+
+        $this->regexString = $regexString;
+    }
+
+    /**
+     * @param mixed $maxLength
+     */
+    public function setMaxLength($maxLength)
+    {
+        if (!is_int($maxLength))
+            throw new \InvalidArgumentException('Expected $maxLength to be integer, got ' . Util::getType($maxLength));
+
+        $this->maxLength = $maxLength;
     }
 }
