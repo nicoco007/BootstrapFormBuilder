@@ -45,11 +45,8 @@ class Form
     /** @var Button[] */
     private $buttons;
 
-    /** @var string */
-    private $success_message;
-
     /** @var bool */
-    private $has_submit_button;
+    private $hasSubmitButton;
 
     /**
      * Form constructor.
@@ -67,27 +64,27 @@ class Form
 
     public function init()
     {
-        $all_controls = $this->getControls();
+        $allControls = $this->getControls();
 
-        if (!isset($this->has_submit_button))
+        if (!isset($this->hasSubmitButton))
             array_unshift($this->buttons, new SubmitButton());
 
-        foreach ($all_controls as $control)
+        foreach ($allControls as $control)
             $control->init();
 
         if ($this->isSubmitted()) {
             /** @var SubmitButton $submit_button */
-            $submit_button = $this->buttons[$_POST['submit']];
+            $submitButton = $this->buttons[$_POST['submit']];
             $error = null;
 
             if (!$this->hasError()) {
                 try {
-                    $this->response = $submit_button->submitCallback($all_controls);
-                    $submit_button->successCallback();
+                    $this->response = $submitButton->submitCallback($allControls);
+                    $submitButton->successCallback();
                 } catch (\Exception $ex) {
                     $error = $ex;
 
-                    $submit_button->errorCallback($ex);
+                    $submitButton->errorCallback($ex);
                 }
             }
 
@@ -225,7 +222,7 @@ class Form
             throw new \InvalidArgumentException(sprintf('A button with the ID "%s" was already added', $button->getId()));
 
         if ($button instanceof SubmitButton)
-            $this->has_submit_button = true;
+            $this->hasSubmitButton = true;
 
         $this->buttons[$button->getId()] = $button;
     }
@@ -275,14 +272,6 @@ class Form
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param string $success_message
-     */
-    public function setSuccessMessage($success_message)
-    {
-        $this->success_message = $success_message;
     }
 
     /**
