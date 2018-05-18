@@ -73,7 +73,7 @@ class PhoneNumberControl extends InputControl
                 if (!$phoneUtil->isValidNumber($proto))
                     return Translations::translate('Please enter a valid phone number.');
             } catch (NumberParseException $ex) {
-                return Translations::translate('Could not parse phone number. Please try again.');
+                return Translations::translate('Please enter a valid phone number.');
             }
         }
 
