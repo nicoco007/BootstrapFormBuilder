@@ -36,7 +36,7 @@ class DateControl extends FormControl
 
     public function renderControl()
     {
-        $value = $this->getValue() !== null ? $this->getValue()->format(Translations::translate('m/d/Y', 'date control DateTime format')) : $this->getRawValue();
+        $value = $this->getValue() !== null ? $this->getValue()->format($this->translate('m/d/Y', 'date control DateTime format')) : $this->getRawValue();
 
         printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
 
@@ -47,9 +47,8 @@ class DateControl extends FormControl
         $input->addAttribute('id', $this->getName());
         $input->addAttribute('name', $this->getName());
         $input->addAttribute('data-target', '#' . $this->getName() . '-wrapper');
-        $input->addAttribute('placeholder', Translations::translate('MM/DD/YYYY', 'date control string format'));
+        $input->addAttribute('placeholder', $this->translate('MM/DD/YYYY', 'date control string format'));
         $input->addAttribute('value', $value);
-        $input->addAttribute('locale', Util::getIETFLocale(LC_TIME)); // TODO: replace this with form language
 
         if ($this->minDate !== null)
             $input->addAttribute('data-min-date', $this->minDate->format('Y-m-d'));
@@ -80,15 +79,15 @@ class DateControl extends FormControl
 
         if (isset($_POST[$this->getName()]) && !Util::stringIsNullOrEmpty($_POST[$this->getName()])) {
             if (date_create($_POST[$this->getName()]) === false)
-                return Translations::translate('Please enter a valid date.');
+                return $this->translate('Please enter a valid date.');
 
             /** @var \DateTime $date */
             $date = $this->getValue();
 
             if (($this->minDate !== null && $date < $this->minDate) || ($this->maxDate !== null && $date > $this->maxDate)) {
-                $minDateStr = $this->minDate->format(Translations::translate('m/d/Y', 'date control DateTime format'));
-                $maxDateStr = $this->maxDate->format(Translations::translate('m/d/Y', 'date control DateTime format'));
-                return sprintf(Translations::translate('Date must be between %s and %s.'), $minDateStr, $maxDateStr);
+                $minDateStr = $this->minDate->format($this->translate('m/d/Y', 'date control DateTime format'));
+                $maxDateStr = $this->maxDate->format($this->translate('m/d/Y', 'date control DateTime format'));
+                return sprintf($this->translate('Date must be between %s and %s.'), $minDateStr, $maxDateStr);
             }
         }
 

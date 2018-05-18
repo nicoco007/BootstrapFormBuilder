@@ -34,7 +34,7 @@ class EmailControl extends InputControl
             return parent::getErrorMessage();
 
         if (!filter_var($this->getValue(), FILTER_VALIDATE_EMAIL))
-            return Translations::translate("Please enter a valid email address.");
+            return $this->translate("Please enter a valid email address.");
 
         return null;
     }

@@ -24,30 +24,24 @@ use POMO\MO;
 class Translations
 {
     /** @var MO */
-    private static $mo;
-    private static $loaded = false;
+    private $mo;
 
-    public static function initialize()
+    public function __construct($locale)
     {
-        if (self::$mo === null)
-            self::$mo = new MO();
+        $this->mo = new MO();
 
-        if (self::$loaded)
-            return;
-
-        $locale = Util::getLocale();
-        $file = realpath('../../i18n/' . $locale . '.mo');
+        while (!file_exists($file = realpath('../../i18n/' . $locale . '.mo')) && strlen($locale) >= 2) {
+            $locale = substr($locale, 0, strlen($locale) - 1);
+        }
 
         if (!file_exists($file))
             return;
 
-        self::$mo->import_from_file($file);
+        $this->mo->import_from_file($file);
     }
 
-    public static function translate($str, $context = null)
+    public function translate($str, $context = null)
     {
-        self::initialize();
-
-        return self::$mo->translate($str, $context);
+        return $this->mo->translate($str, $context);
     }
 }

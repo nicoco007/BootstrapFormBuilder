@@ -51,6 +51,12 @@ class Form
     /** @var int */
     private $columnCount = 1;
 
+    /** @var string */
+    private $locale = 'en';
+
+    /** @var Translations */
+    private $translations;
+
     /**
      * Form constructor.
      * @param string $title
@@ -67,6 +73,8 @@ class Form
 
     public function init()
     {
+        $this->translations = new Translations($this->locale);
+
         if (!isset($this->hasSubmitButton))
             array_unshift($this->buttons, new SubmitButton());
 
@@ -105,7 +113,7 @@ class Form
         if (!$this->init)
             throw new \RuntimeException('Form::init() must be called before rendering');
 
-        printf('<form method="%s" class="bsfb-form">', $this->method);
+        printf('<form method="%s" class="bsfb-form" data-locale="%s">', $this->method, Util::getIETFLocale($this->locale));
 
         if ($this->title !== null)
             printf('<div class="form-title">%s</div>', $this->title);
@@ -231,6 +239,8 @@ class Form
         if ($button instanceof SubmitButton)
             $this->hasSubmitButton = true;
 
+        $button->setParentForm($this);
+
         $this->buttons[$button->getId()] = $button;
     }
 
@@ -290,6 +300,22 @@ class Form
             throw new \InvalidArgumentException('$columnCount must be between 1 and 4');
 
         $this->columnCount = $columnCount;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * @return Translations
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
     }
 
     /**

@@ -21,11 +21,13 @@ var BootstrapFormBuilder = {
     currentLocale: 'en',
     translations: {},
     init: function () {
-        this.setLocale('fr');
         var self = this;
 
         $('.bsfb-form').each(function () {
             var $form = $(this);
+
+            var locale = $form.data('locale');
+            self.setLocale(locale);
 
             $form.addClass('js');
 
@@ -60,7 +62,7 @@ var BootstrapFormBuilder = {
 
                 var options = {
                     format: 'L',
-                    locale: $input.data('locale') || 'en'
+                    locale: locale || 'en'
                 };
 
                 if ($input.data('min-date'))

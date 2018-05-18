@@ -57,10 +57,10 @@ class TextControl extends InputControl
 
         if ($this->getValue() !== null) {
             if ($this->regexString !== null && preg_match($this->regexString, $this->getValue()) !== 1)
-                return Translations::translate('Please enter a valid value.');
+                return $this->translate('Please enter a valid value.');
 
             if ($this->maxLength !== null && mb_strlen($this->getValue()) > $this->maxLength)
-                return sprintf(Translations::translate('Exceeded maximum length of %d characters.'), $this->maxLength);
+                return sprintf($this->translate('Exceeded maximum length of %d characters.'), $this->maxLength);
         }
 
         return null;

@@ -33,6 +33,9 @@ abstract class Button
     /** @var string */
     private $icon;
 
+    /** @var Form */
+    private $parentForm;
+
     /**
      * Button constructor.
      * @param string $id
@@ -92,5 +95,17 @@ abstract class Button
     protected function getIcon()
     {
         return $this->icon;
+    }
+
+    protected function translate($str, $context = null) {
+        return $this->parentForm->getTranslations()->translate($str, $context);
+    }
+
+    /**
+     * @param Form $parentForm
+     */
+    public function setParentForm($parentForm)
+    {
+        $this->parentForm = $parentForm;
     }
 }

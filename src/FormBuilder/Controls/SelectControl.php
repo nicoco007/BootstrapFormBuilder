@@ -31,7 +31,7 @@ class SelectControl extends MultiOptionControl
         printf('<select class="%s" name="%s">', $this->getClasses(), $this->getName());
 
         if (!$this->hasDefault())
-            printf('<option value="">%s</option>', Translations::translate('Select an option&hellip;'));
+            printf('<option value="">%s</option>', $this->translate('Select an option&hellip;'));
 
         foreach ($this->getOptions() as $option) {
             $tag = new HtmlTag('option');

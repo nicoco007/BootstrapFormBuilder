@@ -94,13 +94,13 @@ abstract class FormControl
             print('<div class="child-message">');
 
             if ($this->parent instanceof CheckboxControl && $this->requiredParentValue == true)
-                print(Translations::translate('If you checked the box above:'));
+                print($this->translate('If you checked the box above:'));
             elseif ($this->parent instanceof CheckboxControl && $this->requiredParentValue == false)
-                print(Translations::translate('If you did not check the box above:'));
+                print($this->translate('If you did not check the box above:'));
             elseif ($this->parent instanceof RadioButtonControl)
-                printf(Translations::translate('If you selected "%s" above:'), $this->parent->getValueLabel($this->getRequiredParentValue()));
+                printf($this->translate('If you selected "%s" above:'), $this->parent->getValueLabel($this->getRequiredParentValue()));
             else
-                printf(Translations::translate('If you entered "%s" above:'), $this->parent->getValueLabel($this->getRequiredParentValue()));
+                printf($this->translate('If you entered "%s" above:'), $this->parent->getValueLabel($this->getRequiredParentValue()));
 
             print('</div>');
         }
@@ -203,7 +203,7 @@ abstract class FormControl
     public function getErrorMessage()
     {
         if ($this->isRequired() && ($this->getValue() === null || $this->getValue() === false))
-            return Translations::translate('This field is required.');
+            return $this->translate('This field is required.');
 
         return null;
     }
@@ -252,6 +252,15 @@ abstract class FormControl
             $child->setParentForm($parentForm);
 
         $this->parentForm = $parentForm;
+    }
+
+    /**
+     * @param $str
+     * @param null $context
+     * @return string
+     */
+    protected function translate($str, $context = null) {
+        return $this->parentForm->getTranslations()->translate($str, $context);
     }
 
     /**

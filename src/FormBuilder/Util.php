@@ -172,26 +172,12 @@ class Util
         return trim($str) === "";
     }
 
-    public static function getLocale($category = LC_MESSAGES)
-    {
-        $locale = strtolower(setlocale($category, 0));
-
-        if (strlen($locale) > 5)
-            $locale = substr($locale, 0, 5);
-
-        // make sure format is what we expect
-        if (preg_match('/[a-z]{2}(?:_[a-z]{2})?/i', $locale))
-            return $locale;
-
-        return 'en';
-    }
-
     /**
-     * @param int $category Locale category (e.g. LC_TIME, LC_MESSAGES, etc.)
+     * @param string $locale
      * @return string Returns the system locale formatted using the IETF standard (e.g. en-us)
      */
-    public static function getIETFLocale($category = LC_MESSAGES)
+    public static function getIETFLocale($locale)
     {
-        return str_replace('_', '-', self::getLocale($category));
+        return str_replace('_', '-', $locale);
     }
 }

@@ -22,13 +22,13 @@ namespace FormBuilder;
 class SubmitButton extends Button
 {
     /** @var callable */
-    private $submit_callback;
+    private $submitCallback;
 
     /** @var callable */
-    private $success_callback;
+    private $successCallback;
 
     /** @var callable */
-    private $error_callback;
+    private $errorCallback;
 
     public function __construct($text = 'Submit', $name = 'submit', $icon = 'save', $class = BootstrapClass::SUCCESS)
     {
@@ -44,27 +44,27 @@ class SubmitButton extends Button
     }
 
     /**
-     * @param callable $submit_callback
+     * @param callable $submitCallback
      */
-    public function setSubmitCallback($submit_callback)
+    public function setSubmitCallback($submitCallback)
     {
-        $this->submit_callback = $submit_callback;
+        $this->submitCallback = $submitCallback;
     }
 
     /**
-     * @param callable $success_callback
+     * @param callable $successCallback
      */
-    public function setSuccessCallback($success_callback)
+    public function setSuccessCallback($successCallback)
     {
-        $this->success_callback = $success_callback;
+        $this->successCallback = $successCallback;
     }
 
     /**
-     * @param callable $error_callback
+     * @param callable $errorCallback
      */
-    public function setErrorCallback($error_callback)
+    public function setErrorCallback($errorCallback)
     {
-        $this->error_callback = $error_callback;
+        $this->errorCallback = $errorCallback;
     }
 
     /**
@@ -75,16 +75,16 @@ class SubmitButton extends Button
     {
         $response = null;
 
-        if ($this->submit_callback !== null)
-            $response = call_user_func($this->submit_callback, $controls);
+        if ($this->submitCallback !== null)
+            $response = call_user_func($this->submitCallback, $controls);
 
-        return $response !== null ? $response : new SuccessResponse(Translations::translate('Form submitted successfully.'));
+        return $response !== null ? $response : new SuccessResponse($this->translate('Form submitted successfully.'));
     }
 
     public function successCallback()
     {
-        if ($this->success_callback !== null)
-            call_user_func($this->success_callback);
+        if ($this->successCallback !== null)
+            call_user_func($this->successCallback);
     }
 
     /**
@@ -92,7 +92,7 @@ class SubmitButton extends Button
      */
     public function errorCallback($ex)
     {
-        if ($this->error_callback !== null)
-            call_user_func($this->error_callback, $ex);
+        if ($this->errorCallback !== null)
+            call_user_func($this->errorCallback, $ex);
     }
 }
