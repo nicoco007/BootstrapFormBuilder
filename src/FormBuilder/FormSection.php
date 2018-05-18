@@ -50,7 +50,10 @@ class FormSection
         print('<div class="row">');
 
         foreach ($this->controls as $control) {
-            printf('<div class="col-xs-12 col-xl-%d col-md-%d">', 12 / $this->columnCount, 12 / ceil($this->columnCount / 2));
+            $xl = 12 / $this->columnCount * $control->getColumnSpan();
+            $md = 12 / ceil($this->columnCount / 2) * $control->getColumnSpan();
+
+            printf('<div class="col-xs-12 col-xl-%d col-md-%d">', min(12, $xl), min(12, $md));
 
             $control->render();
 

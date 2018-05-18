@@ -56,6 +56,9 @@ abstract class FormControl
     /** @var Form */
     private $parentForm;
 
+    /** @var int */
+    private $columnSpan = 1;
+
     /**
      * FormControl constructor.
      * @param string $label
@@ -333,6 +336,25 @@ abstract class FormControl
     public function getRequiredParentValue()
     {
         return $this->requiredParentValue;
+    }
+
+    /**
+     * @param int $columnSpan
+     */
+    public function setColumnSpan($columnSpan)
+    {
+        if ($columnSpan < 1 || $columnSpan > 4)
+            throw new \InvalidArgumentException('$columnSpan must be between 1 and 4');
+
+        $this->columnSpan = $columnSpan;
+    }
+
+    /**
+     * @return int
+     */
+    public function getColumnSpan()
+    {
+        return $this->columnSpan;
     }
 
     /**
