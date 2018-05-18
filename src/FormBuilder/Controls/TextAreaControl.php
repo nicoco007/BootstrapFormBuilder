@@ -19,15 +19,29 @@
 namespace FormBuilder\Controls;
 
 
+use FormBuilder\HtmlTag;
+use FormBuilder\Util;
+
 class TextAreaControl extends FormControl
 {
+    /** @var string */
     private $placeholder;
+
+    /** @var int */
+    private $maxLength;
 
     function renderControl()
     {
         printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
 
-        printf('<textarea class="%1$s" id="%2$s" name="%2$s" placeholder="%3$s">%4$s</textarea>', $this->getClasses(), $this->getName(), $this->getPlaceholder(), $this->getValue());
+        $textarea = new HtmlTag('textarea');
+        $textarea->addAttribute('class', $this->getClasses());
+        $textarea->addAttribute('id', $this->getName());
+        $textarea->addAttribute('name', $this->getName());
+        $textarea->addAttribute('placeholder', $this->getPlaceholder());
+        $textarea->setInnerText($this->getValue());
+
+        $textarea->render();
     }
 
     public function getPlaceholder()
@@ -43,6 +57,17 @@ class TextAreaControl extends FormControl
     public function getType()
     {
         return 'textarea';
+    }
+
+    /**
+     * @param int $maxLength
+     */
+    public function setMaxLength($maxLength)
+    {
+        if (!is_int($maxLength))
+            throw new \InvalidArgumentException('Expected $maxLength to be integer, got ' . Util::getType($maxLength));
+
+        $this->maxLength = $maxLength;
     }
 
     private function getClasses()

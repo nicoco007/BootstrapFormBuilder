@@ -190,7 +190,6 @@ function parseVal($val)
 <body>
 <div class="container">
     <h1>Test</h1>
-
     <?php if (!empty($_POST)): ?>
         <h2>Raw POST Data</h2>
         <pre><?php var_dump($_POST) ?></pre>

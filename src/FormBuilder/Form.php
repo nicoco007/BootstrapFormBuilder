@@ -67,12 +67,10 @@ class Form
 
     public function init()
     {
-        $allControls = $this->getControls();
-
         if (!isset($this->hasSubmitButton))
             array_unshift($this->buttons, new SubmitButton());
 
-        foreach ($allControls as $control)
+        foreach ($this->getControls() as $control)
             $control->init();
 
         if ($this->isSubmitted()) {
@@ -82,7 +80,7 @@ class Form
 
             if (!$this->hasError()) {
                 try {
-                    $this->response = $submitButton->submitCallback($allControls);
+                    $this->response = $submitButton->submitCallback($this->getControls(true));
                     $submitButton->successCallback();
                 } catch (\Exception $ex) {
                     $error = $ex;
@@ -105,7 +103,7 @@ class Form
     public function render()
     {
         if (!$this->init)
-            throw new \RuntimeException('Form::init must be called before rendering');
+            throw new \RuntimeException('Form::init() must be called before rendering');
 
         printf('<form method="%s" class="bsfb-form">', $this->method);
 

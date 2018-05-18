@@ -78,7 +78,7 @@ class SubmitButton extends Button
         if ($this->submit_callback !== null)
             $response = call_user_func($this->submit_callback, $controls);
 
-        return $response ?: new SuccessResponse(Translations::translate('Form submitted successfully.'));
+        return $response !== null ? $response : new SuccessResponse(Translations::translate('Form submitted successfully.'));
     }
 
     public function successCallback()

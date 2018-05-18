@@ -60,7 +60,7 @@ class HtmlTag
         if ($this->self_enclosed)
             throw new \RuntimeException('Cannot set inner text on self enclosed tag');
 
-        if (!is_string($text))
+        if ($text !== null && !is_string($text))
             throw new \InvalidArgumentException('Expected $text to be string, got ' . Util::getType($text));
 
         $this->inner = $text;
