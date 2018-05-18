@@ -37,7 +37,7 @@ class Form
     private $response;
 
     /** @var Controls\FormControl[] */
-    private $controls;
+    private $controls = [];
 
     /** @var FormSection[] */
     private $sections;
@@ -154,8 +154,8 @@ class Form
         if (count($this->sections) > 0)
             throw new InvalidOperationException('Cannot add controls to form with sections');
 
-        if (isset($this->controls[$control->getName()]))
-            throw new \InvalidArgumentException(sprintf('A control with the name "%s" was already added', $control->getName()));
+        if (count($intersect = array_intersect_key($this->getControls(true), $control->getChildren(true))) > 0)
+            throw new \RuntimeException('Control with name ' . array_keys($intersect)[0] . ' was already added.');
 
         $control->setParentForm($this);
 
@@ -173,28 +173,14 @@ class Form
 
         if (count($this->sections) > 0) {
             foreach ($this->sections as $section) {
-                $temp = $section->getControls();
-                $intersect = array_intersect_key($controls, $temp);
-
-                if (count($intersect) > 0)
-                    throw new \RuntimeException('Control with name "' . array_keys($intersect)[0] . '" present more than once');
-                else
-                    $controls += $temp;
+                $controls += $section->getControls($deep);
             }
         } else {
             $controls = $this->controls;
-        }
 
-        if ($deep) {
-            foreach ($controls as $control) {
-                $temp = $control->getChildren();
-                $intersect = array_intersect_key($controls, $temp);
-
-                if (count($intersect) > 0)
-                    throw new \RuntimeException('Control with name "' . array_keys($intersect)[0] . '" present more than once');
-                else
-                    $controls += $temp;
-            }
+            if ($deep)
+                foreach ($controls as $control)
+                    $controls += $control->getChildren(true);
         }
 
         return $controls;
@@ -210,6 +196,9 @@ class Form
 
         if (count($this->controls) > 0)
             throw new InvalidOperationException('Cannot add sections to form with independent controls');
+
+        if (count($intersect = array_intersect_key($this->getControls(true), $section->getControls(true))) > 0)
+            throw new \RuntimeException('Control with name ' . array_keys($intersect)[0] . ' was already added.');
 
         $section->setParent($this);
 

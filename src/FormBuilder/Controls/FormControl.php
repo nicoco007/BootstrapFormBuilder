@@ -282,6 +282,9 @@ abstract class FormControl
         $child->setParent($this);
         $child->setRequiredParentValue($requiredValue);
 
+        if (count($intersect = array_intersect_key($this->getChildren(true), $child->getChildren(true))) > 0)
+            throw new \RuntimeException('Control with name ' . array_keys($intersect)[0] . ' was already added.');
+
         $this->children[$child->getName()] = $child;
     }
 
@@ -293,17 +296,9 @@ abstract class FormControl
     {
         $controls = $this->children;
 
-        if ($deep) {
-            foreach ($this->children as $child) {
-                $temp = $child->getChildren();
-                $intersect = array_intersect_key($controls, $temp);
-
-                if (count($intersect) > 0)
-                    throw new \RuntimeException('Control with name "' . array_keys($intersect)[0] . '" present more than once');
-                else
-                    $controls += $temp;
-            }
-        }
+        if ($deep)
+            foreach ($this->children as $child)
+                $controls += $child->getChildren();
 
         return $controls;
     }

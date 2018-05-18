@@ -43,7 +43,7 @@ $section1 = new FormSection('Section I');
 $section2 = new FormSection('Section II');
 
 $text_control = new TextControl('Name', 'name');
-$text2 = new TextControl('Name', 'name');
+$text2 = new TextControl('Name', 'name2');
 $email_control = new EmailControl('Email Address', 'email');
 $password_control = new PasswordControl('Password', 'password');
 $checkbox = new CheckboxControl('Check this out', 'checkbox');

@@ -28,7 +28,7 @@ class FormSection
     private $label;
 
     /** @var Controls\FormControl[] */
-    private $controls;
+    private $controls = [];
 
     /**
      * FormSection constructor.
@@ -59,12 +59,21 @@ class FormSection
         if (!($control instanceof Controls\FormControl))
             throw new \InvalidArgumentException('Expected $control to be instance of FormControl, got ' . Util::getType($control));
 
+        if (count($intersect = array_intersect_key($this->getControls(), $control->getChildren(true))) > 0)
+            throw new \RuntimeException('Control with name ' . array_keys($intersect)[0] . ' was already added.');
+
         $this->controls[$control->getName()] = $control;
     }
 
-    public function getControls()
+    public function getControls($deep = false)
     {
-        return $this->controls;
+        $controls = $this->controls;
+
+        if ($deep)
+            foreach ($this->controls as $control)
+                $controls += $control->getChildren(true);
+
+        return $controls;
     }
 
     /**
