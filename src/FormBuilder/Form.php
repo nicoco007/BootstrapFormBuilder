@@ -48,6 +48,9 @@ class Form
     /** @var bool */
     private $hasSubmitButton;
 
+    /** @var int */
+    private $columnCount = 1;
+
     /**
      * Form constructor.
      * @param string $title
@@ -120,11 +123,17 @@ class Form
             }
         } else {
             print('<fieldset>');
+            print('<div class="row">');
 
             foreach ($this->controls as $control) {
+                printf('<div class="col-xs-12 col-md-%d">', 12 / $this->columnCount);
+
                 $control->render();
+
+                print('</div>');
             }
 
+            print('</div>');
             print('</fieldset>');
         }
 
@@ -272,6 +281,17 @@ class Form
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $columnCount
+     */
+    public function setColumnCount($columnCount)
+    {
+        if ($columnCount < 1 || $columnCount > 4)
+            throw new \InvalidArgumentException('$columnCount must be between 1 and 4');
+
+        $this->columnCount = $columnCount;
     }
 
     /**

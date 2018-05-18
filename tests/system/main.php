@@ -117,6 +117,10 @@ $section2->addControl($radio2);
 $section2->addControl($select2);
 $section2->addControl($tel);
 $section2->addControl($text2);
+$section2->addControl($text2);
+
+$section1->setColumnCount(2);
+$section2->setColumnCount(3);
 
 $form->addSection($section1);
 $form->addSection($section2);

@@ -30,6 +30,9 @@ class FormSection
     /** @var Controls\FormControl[] */
     private $controls = [];
 
+    /** @var int */
+    private $columnCount = 1;
+
     /**
      * FormSection constructor.
      * @param string $label
@@ -44,10 +47,17 @@ class FormSection
         printf('<div class="form-section-title">%s</div>', $this->label);
 
         print('<fieldset>');
+        print('<div class="row">');
 
-        foreach ($this->controls as $control)
+        foreach ($this->controls as $control) {
+            printf('<div class="col-xs-12 col-xl-%d col-md-%d">', 12 / $this->columnCount, 12 / ceil($this->columnCount / 2));
+
             $control->render();
 
+            print('</div>');
+        }
+
+        print('</div>');
         print('</fieldset>');
     }
 
@@ -91,13 +101,13 @@ class FormSection
     }
 
     /**
-     * @return bool
+     * @param int $columnCount
      */
-    public function isSubmitted()
+    public function setColumnCount($columnCount)
     {
-        if ($this->parent !== null)
-            return $this->parent->isSubmitted();
+        if ($columnCount < 1 || $columnCount > 4)
+            throw new \InvalidArgumentException('$columnCount must be between 1 and 4');
 
-        return false;
+        $this->columnCount = $columnCount;
     }
 }
