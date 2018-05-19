@@ -235,7 +235,7 @@ var BootstrapFormBuilder = {
     },
     ajaxSuccess: function ($form, json) {
         if (json['received'] !== true) {
-            $form.prepend('<div class="alert alert-danger">' + this.translate('An unexpected server-side error occured. Please try again later.') + '</div>');
+            this.showAlert($form, this.translate('An unexpected server-side error occured. Please try again later.'), 'danger');
             return;
         }
 
@@ -256,12 +256,12 @@ var BootstrapFormBuilder = {
             }
         } else if (json['error']) {
             if (json['error']['message']) {
-                $form.prepend('<div class="alert alert-danger">' + json['error']['message'] + '</div>');
+                this.showAlert($form, json['error']['message'], 'danger');
             } else {
-                $form.prepend('<div class="alert alert-danger">' + this.translate('An unexpected server-side error occured. Please try again later.') + '</div>');
+                this.showAlert($form, this.translate('An unexpected server-side error occured. Please try again later.'), 'danger')
             }
         } else if (json['response']) {
-            $form.prepend('<div class="alert alert-' + json['response']['class'] + '">' + json['response']['message'] + '</div>');
+            this.showAlert($form, json['response']['message'], json['response']['class'], json['response']['icon']);
 
             if (json['success'])
                 window.onbeforeunload = null;
@@ -269,12 +269,12 @@ var BootstrapFormBuilder = {
             if (json['response']['redirect'])
                 window.location = json['response']['redirect'];
         } else {
-            $form.prepend('<div class="alert alert-success">' + this.translate('Form submitted successfully.') + '</div>');
+            this.showAlert($form, this.translate('Form submitted successfully.'), 'success');
             window.onbeforeunload = null;
         }
     },
     ajaxError: function ($form, jqXHR, textStatus, errorThrown) {
-        $form.prepend('<div class="alert alert-danger">' + this.translate('Unable to submit form: ') + errorThrown + '</div>');
+        this.showAlert($form, this.translate('Unable to submit form: ') + errorThrown, 'danger');
     },
     ajaxComplete: function ($form, $button) {
         $button.find('i.fa.loader').remove();
@@ -292,6 +292,21 @@ var BootstrapFormBuilder = {
 
         $form.find('fieldset, button').prop('disabled', false);
         $form.find('a').removeClass('disabled');
+    },
+    showAlert: function ($form, msg, msgClass, icon) {
+        var $title = $form.find('.form-title');
+        var html = '<div class="alert alert-' + (msgClass || 'info') + '">';
+
+        if (icon)
+            html += '<i class="fa fa-' + icon + '"></i>&nbsp;';
+
+        html += msg + '</div>';
+
+        if ($title.length) {
+            $title.after(html);
+        } else {
+            $form.prepend(html);
+        }
     }
 };
 

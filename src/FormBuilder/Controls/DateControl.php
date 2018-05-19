@@ -20,7 +20,6 @@ namespace FormBuilder\Controls;
 
 
 use FormBuilder\HtmlTag;
-use FormBuilder\Translations;
 use FormBuilder\Util;
 
 class DateControl extends FormControl

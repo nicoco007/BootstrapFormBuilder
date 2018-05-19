@@ -19,8 +19,6 @@
 namespace FormBuilder\Controls;
 
 
-use FormBuilder\Translations;
-
 class EmailControl extends InputControl
 {
     public function renderContents()

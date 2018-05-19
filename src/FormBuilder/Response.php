@@ -19,7 +19,7 @@
 namespace FormBuilder;
 
 
-abstract class Response
+abstract class Response implements \JsonSerializable
 {
     /** @var string */
     private $message;
@@ -28,15 +28,19 @@ abstract class Response
     private $class;
 
     /** @var string */
+    private $icon;
+
+    /** @var string */
     private $redirect_url;
 
     /**
      * Response constructor.
      * @param string $message
      * @param string $class
+     * @param string $icon
      * @param string $redirect_url
      */
-    public function __construct($message, $class, $redirect_url = null)
+    public function __construct($message, $class, $icon = 'info-circle', $redirect_url = null)
     {
         if (!is_string($message))
             throw new \InvalidArgumentException('Expected $message to be string, got ' . Util::getType(($message)));
@@ -44,11 +48,15 @@ abstract class Response
         if (!is_string($class))
             throw new \InvalidArgumentException('Expected $class to be string, got ' . Util::getType(($class)));
 
+        if (!is_string($icon))
+            throw new \InvalidArgumentException('Expected $icon to be string, got ' . Util::getType(($icon)));
+
         if ($redirect_url !== null && !is_string($redirect_url))
             throw new \InvalidArgumentException('Expected $redirect_url to be string, got ' . Util::getType(($redirect_url)));
 
         $this->message = $message;
         $this->class = $class;
+        $this->icon = $icon;
         $this->redirect_url = $redirect_url;
     }
 
@@ -74,5 +82,15 @@ abstract class Response
     public function getRedirectUrl()
     {
         return $this->redirect_url;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'message' => $this->message,
+            'class' => $this->class,
+            'icon' => $this->icon,
+            'redirect' => $this->redirect_url
+        ];
     }
 }

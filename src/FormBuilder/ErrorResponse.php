@@ -21,8 +21,8 @@ namespace FormBuilder;
 
 class ErrorResponse extends Response
 {
-    public function __construct($message)
+    public function __construct($message, $icon = 'exclamation-circle')
     {
-        parent::__construct($message, BootstrapClass::DANGER);
+        parent::__construct($message, BootstrapClass::DANGER, $icon);
     }
 }

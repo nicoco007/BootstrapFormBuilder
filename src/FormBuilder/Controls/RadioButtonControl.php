@@ -20,7 +20,6 @@ namespace FormBuilder\Controls;
 
 
 use FormBuilder\HtmlTag;
-use FormBuilder\Util;
 
 class RadioButtonControl extends MultiOptionControl
 {

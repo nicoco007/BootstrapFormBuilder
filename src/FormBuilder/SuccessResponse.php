@@ -21,8 +21,8 @@ namespace FormBuilder;
 
 class SuccessResponse extends Response
 {
-    public function __construct($message, $redirect_url = null)
+    public function __construct($message, $icon = 'info-circle', $redirect_url = null)
     {
-        parent::__construct($message, BootstrapClass::SUCCESS, $redirect_url);
+        parent::__construct($message, BootstrapClass::SUCCESS, $icon, $redirect_url);
     }
 }

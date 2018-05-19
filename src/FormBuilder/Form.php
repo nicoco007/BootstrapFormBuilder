@@ -329,11 +329,7 @@ class Form
         $data['success'] = $this->response instanceof SuccessResponse;
 
         if ($this->response !== null) {
-            $data['response'] = [
-                'message' => $this->response->getMessage(),
-                'class' => $this->response->getClass(),
-                'redirect' => $this->response->getRedirectUrl()
-            ];
+            $data['response'] = $this->response->jsonSerialize();
         }
 
         if ($ex !== null) {
