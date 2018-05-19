@@ -47,37 +47,6 @@ var BootstrapFormBuilder = {
                 self.submitForm($form);
             });
 
-            // initialize date/time pickers
-            $form.find('.datetimepicker-date').each(function () {
-                var $input = $(this);
-                var id = $input.attr('id');
-                var $inputGroup = $('<div class="input-group date" data-target-input="nearest" id="' + id + '-wrapper">');
-
-                $inputGroup.append('<div class="input-group-prepend"><button type="button" class="btn btn-primary" data-target="#' + id + '-wrapper" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></button></div>');
-
-                $input.after($inputGroup);
-                $input.remove();
-
-                $inputGroup.append($input);
-
-                var options = {
-                    format: 'L',
-                    locale: locale || 'en'
-                };
-
-                if ($input.data('min-date'))
-                    options['minDate'] = new Date($input.data('min-date'));
-
-                if ($input.data('max-date'))
-                    options['maxDate'] = new Date($input.data('max-date'));
-
-                $inputGroup.datetimepicker(options);
-            });
-
-            $form.find('select').each(function () {
-                self.dropdownSelect($(this));
-            });
-
             $form.find('[data-parent-value]').each(function () {
                 var $child = $(this);
                 var $target = $('[name="' + $child.data('parent') + '"]');
@@ -98,19 +67,55 @@ var BootstrapFormBuilder = {
                 }).trigger('change');
             });
 
-            $form.find('input[type="tel"]').each(function () {
-                var $input = $(this);
-
-                var countries = ['US', 'CA'];
-
-                if ($input.data('pref-countries'))
-                    countries = $input.data('pref-countries').split(',');
-
-                $input.intlTelInput({
-                    initialCountry: $input.data('initial-country') || 'US',
-                    preferredCountries: countries
-                });
+            $form.find('select').each(function () {
+                self.dropdownSelect($(this));
             });
+
+            // initialize date/time pickers - requires Tempus Dominus https://tempusdominus.github.io/bootstrap-4/
+            if (typeof $.fn.datetimepicker === 'function') {
+                $form.find('.datetimepicker-date').each(function () {
+                    var $input = $(this);
+                    var id = $input.attr('id');
+                    var $inputGroup = $('<div class="input-group date" data-target-input="nearest" id="' + id + '-wrapper">');
+
+                    $inputGroup.append('<div class="input-group-prepend"><button type="button" class="btn btn-primary" data-target="#' + id + '-wrapper" data-toggle="datetimepicker"><i class="fa fa-calendar"></i></button></div>');
+
+                    $input.after($inputGroup);
+                    $input.remove();
+
+                    $inputGroup.append($input);
+
+                    var options = {
+                        format: 'L',
+                        locale: locale || 'en'
+                    };
+
+                    if ($input.data('min-date'))
+                        options['minDate'] = new Date($input.data('min-date'));
+
+                    if ($input.data('max-date'))
+                        options['maxDate'] = new Date($input.data('max-date'));
+
+                    $inputGroup.datetimepicker(options);
+                });
+            }
+
+            // initialize telephone number inputs - requires International Telephone Input https://github.com/jackocnr/intl-tel-input
+            if (typeof $.fn.intlTelInput === 'function') {
+                $form.find('input[type="tel"]').each(function () {
+                    var $input = $(this);
+
+                    var countries = ['US', 'CA'];
+
+                    if ($input.data('pref-countries'))
+                        countries = $input.data('pref-countries').split(',');
+
+                    $input.intlTelInput({
+                        initialCountry: $input.data('initial-country') || 'US',
+                        preferredCountries: countries
+                    });
+                });
+            }
         });
     },
     registerLocale: function (locale, obj) {
