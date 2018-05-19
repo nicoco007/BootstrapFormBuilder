@@ -95,6 +95,16 @@
       flex: 1 1 auto;
       width: 1%;
       margin-bottom: 0;
+      background: $input-bg;
+
+      .form-control {
+        background: none;
+        z-index: 0;
+      }
+
+      .form-control.is-invalid {
+        z-index: 5;
+      }
 
       .progress {
         position: absolute;
@@ -103,7 +113,7 @@
         right: $input-border-width;
         height: 3px;
         border-radius: 0 0 0 $input-border-radius;
-        z-index: 4;
+        z-index: 0;
       }
     }
   }
