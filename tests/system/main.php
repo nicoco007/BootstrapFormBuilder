@@ -121,6 +121,8 @@ $section2->addControl($text2);
 
 $radio->setColumnSpan(2);
 
+$password_control->setShowPasswordStrength(true);
+
 $section1->setColumnCount(2);
 $section2->setColumnCount(3);
 
@@ -226,6 +228,8 @@ function parseVal($val)
         integrity="sha256-DU7VFVkQvkOiAFq6ovT5dnQFcZVeXnFnfmTVirFCsAw=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.15/js/utils.js"
         integrity="sha256-+iMZzfetfvKzWUvuUAGnNmowUrc1d11Y+JWx1cHfI8Y=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"
+        integrity="sha256-Znf8FdJF85f1LV0JmPOob5qudSrns8pLPZ6qkd/+F0o=" crossorigin="anonymous"></script>
 <script src="../../dist/js/script.min.js"></script>
 <script src="../../dist/js/locale/fr.js"></script>
 </body>

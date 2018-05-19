@@ -4,6 +4,7 @@
   "description": "A simple form builder for Bootstrap 4",
   "dependencies": {},
   "devDependencies": {
+    "bootstrap": "^4.1.1",
     "grunt": "^1.0.2",
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^3.3.0"

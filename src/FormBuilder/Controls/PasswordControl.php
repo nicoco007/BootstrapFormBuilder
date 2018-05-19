@@ -19,11 +19,48 @@
 namespace FormBuilder\Controls;
 
 
+use FormBuilder\HtmlTag;
+
 class PasswordControl extends InputControl
 {
+    /** @var bool */
+    private $showPasswordStrength;
+
+    /** @var int */
+    private $minLength = 8;
+
     public function renderContents()
     {
-        printf('<input type="password" class="%1$s" id="%2$s" name="%2$s" placeholder="%3$s">', $this->getClasses(), $this->getName(), $this->getPlaceholder());
+        $input = new HtmlTag('input', true);
+        $input->addAttribute('type', 'password');
+        $input->addAttribute('class', $this->getClasses());
+        $input->addAttribute('id', $this->getName());
+        $input->addAttribute('name', $this->getName());
+        $input->addAttribute('placeholder', $this->getPlaceholder());
+
+        if ($this->showPasswordStrength === true)
+            $input->addAttribute('data-show-strength', 'true');
+
+        if ($this->minLength > 0)
+            $input->addAttribute('minlength', strval($this->minLength));
+
+        $input->render();
+    }
+
+    /**
+     * @param bool $showPasswordStrength
+     */
+    public function setShowPasswordStrength($showPasswordStrength)
+    {
+        $this->showPasswordStrength = $showPasswordStrength;
+    }
+
+    /**
+     * @param int $minLength
+     */
+    public function setMinLength($minLength)
+    {
+        $this->minLength = $minLength;
     }
 
     public function getType()

@@ -116,7 +116,133 @@ var BootstrapFormBuilder = {
                     });
                 });
             }
+
+            $form.find('input[type="password"]').each(function () {
+                self.showPassword($(this));
+            });
+
+            if (typeof zxcvbn === 'function') {
+                $form.find('input[type="password"][data-show-strength="true"]').each(function () {
+                    self.passwordStrengthMeter($(this));
+                });
+            }
         });
+    },
+    showPassword: function ($input) {
+        var $plaintextInput = $('<input type="text" class="form-control" style="display: none" />');
+        var $inputGroup = $('<div class="input-group reveal-password"></div>');
+        var $inputGroupAppend = $('<div class="input-group-append"></div>');
+        var $button = $('<button class="btn btn-primary" type="button"></button>');
+
+        var copy = ['placeholder', 'minlength'];
+
+        for (var i = 0; i < copy.length; i++) {
+            $plaintextInput.attr(copy[i], $input.attr(copy[i]));
+        }
+
+        $input.after($inputGroup);
+        $input.remove();
+
+        $button.html('<i class="fa fa-eye"></i>');
+        $inputGroupAppend.append($button);
+
+        $inputGroup.append($input);
+        $inputGroup.append($plaintextInput);
+        $inputGroup.append($inputGroupAppend);
+
+        $button.on('click', function () {
+            var $fa = $button.find('.fa');
+            var visible = $input.css('display') === 'none';
+
+            $input.css('display', visible ? 'block' : 'none');
+            $plaintextInput.css('display', visible ? 'none' : 'block');
+
+            $fa.removeClass('fa-eye fa-eye-slash');
+            $fa.addClass(visible ? 'fa-eye' : 'fa-eye-slash');
+        });
+
+        $input.on('change keyup', function () { $plaintextInput.val($input.val()) });
+        $plaintextInput.on('change keyup', function () { $input.val($plaintextInput.val()) });
+    },
+    passwordStrengthMeter: function ($input) {
+        var self = this;
+
+        var colors = { 0: 'danger', 1: 'danger', 2: 'warning', 3: 'info', 4: 'success' };
+        var descriptions = { 0: 'Very low', 1: 'Low', 2: 'Medium', 3: 'Good', 4: 'Excellent' };
+
+        var $parent = $input.parent();
+        var $inputs = $parent.find('input');
+
+        var $inputContainer = $('<div class="input-container"></div>');
+
+        var $progress = $('<div class="progress"></div>');
+        var $bar = $('<div class="progress-bar" role="progressbar" style="width: 0" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5"></div>');
+
+        var $passwordStrength = $('<small class="form-text">' + self.translate('Password strength: ') + '</small>');
+        var $passwordStrengthText = $('<span></span>');
+        var $warning = $('<small class="form-text"></small>');
+
+        var minLength = $input.attr('minlength') || 0;
+
+        $progress.append($bar);
+
+        $input.after($inputContainer);
+        $input.remove();
+
+        $inputContainer.append($inputs);
+        $inputContainer.append($progress);
+
+        $passwordStrength.append($passwordStrengthText);
+
+        $parent.addClass('password-strength');
+        $parent.after($passwordStrength);
+        $parent.after($warning);
+
+        var callback = function ($target) {
+            var value = $target.val();
+
+            $inputs.val(value);
+
+            $bar.removeClass('bg-secondary bg-danger bg-warning bg-info bg-success');
+            $passwordStrengthText.removeClass('text-secondary text-danger text-warning text-info text-success');
+            $warning.removeClass('text-secondary text-danger text-warning text-info text-success');
+
+            if (value.length >= minLength) {
+                var result = zxcvbn(value.substr(0, 100));
+
+                $bar.addClass('bg-' + colors[result.score]);
+                $passwordStrengthText.addClass('text-' + colors[result.score]);
+                $warning.addClass('text-' + colors[result.score]);
+
+                $bar.width((result.score + 1) / 5 * 100 + '%');
+                $bar.attr('aria-valuenow', result.score + 1);
+
+                $passwordStrengthText.text(self.translate(descriptions[result.score]));
+                $warning.text(self.translate(result.feedback.warning));
+            } else if (value.length > 0) {
+                $bar.addClass('bg-danger');
+                $passwordStrengthText.addClass('text-danger');
+                $warning.addClass('text-danger');
+
+                $bar.width('5%');
+                $bar.attr('aria-valuenow', 1);
+
+                $passwordStrengthText.text(self.translate('Too short'));
+                $warning.text('');
+            } else {
+                $bar.addClass('bg-secondary');
+                $passwordStrengthText.addClass('text-secondary');
+                $warning.addClass('text-secondary');
+
+                $bar.width(0);
+                $bar.attr('aria-valuenow', 0);
+
+                $passwordStrengthText.text(self.translate('Too short'));
+                $warning.text('');
+            }
+        };
+
+        $inputs.on('change keyup', function () { callback($(this)); }).trigger('change');
     },
     registerLocale: function (locale, obj) {
         this.translations[locale] = obj;
@@ -252,11 +378,11 @@ var BootstrapFormBuilder = {
                 var $element = $form.find('[name="' + key + '"], [data-ref="' + key + '"]');
                 var $group = $element.closest('.form-group');
 
-                $element.addClass('is-invalid');
+                $group.find('.form-control').addClass('is-invalid');
 
                 // put outside input group if it exists, then try after the form control, then after the last
                 // custom control (checkbox or radio)
-                $group.find('.input-group, .form-control, .custom-control:last')
+                $group.find('.input-group, .password-strength, .form-control, .custom-control:last')
                     .first().after('<div class="invalid-feedback d-block">' + error + '</div>');
             }
         } else if (json['error']) {

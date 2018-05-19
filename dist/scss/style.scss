@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+@import '../../node_modules/bootstrap/scss/functions';
+@import '../../node_modules/bootstrap/scss/variables';
 
 .bsfb-form {
   .form-title {
@@ -79,6 +81,31 @@
 
   .intl-tel-input {
     width: 100%;
+  }
+
+  .reveal-password .form-control {
+    border-radius: $input-border-radius 0 0 $input-border-radius;
+    margin-left: 0;
+  }
+
+  .password-strength {
+    .input-container {
+      display: flex;
+      position: relative;
+      flex: 1 1 auto;
+      width: 1%;
+      margin-bottom: 0;
+
+      .progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: $input-border-width;
+        height: 3px;
+        border-radius: 0 0 0 $input-border-radius;
+        z-index: 4;
+      }
+    }
   }
 }
 
