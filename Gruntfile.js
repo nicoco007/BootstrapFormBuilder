@@ -15,17 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     grunt.initConfig({
         sass: {
+            options: {
+                outputStyle: 'compressed',
+                sourceMap: true
+            },
             dist: {
-                options: {
-                    style: 'compressed'
-                },
                 files: [{
                     expand: true,
                     cwd: 'dist/scss',
                     src: ['*.scss'],
+                    dest: 'dist/css',
+                    ext: '.min.css'
+                }]
+            }
+        },
+        autoprefixer: {
+            dist: {
+                options: {
+                    map: true
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'dist/css',
+                    src: ['*.min.css'],
                     dest: 'dist/css',
                     ext: '.min.css'
                 }]
@@ -44,8 +59,9 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['sass', 'uglify']);
+    grunt.registerTask('default', ['sass', 'autoprefixer', 'uglify']);
 };
