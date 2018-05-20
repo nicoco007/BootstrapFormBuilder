@@ -35,13 +35,6 @@ var BootstrapFormBuilder = {
                 $(this).attr('clicked', 'true');
             });
 
-            $form.find('input, textarea').on('change', function () {
-                window.onbeforeunload = function (event) {
-                    event.returnValue = 'no';
-                    return 'no';
-                };
-            });
-
             $form.on("submit", function (event) {
                 event.preventDefault();
                 self.submitForm($form);
@@ -126,6 +119,19 @@ var BootstrapFormBuilder = {
                     self.passwordStrengthMeter($(this));
                 });
             }
+
+            $form.find('.form-control, .custom-control-input').on('change keyup', function () {
+                var $group = $(this).parents('.form-group');
+                var $elements = $group.find('.form-control, .custom-control-input');
+
+                $elements.removeClass('is-invalid');
+                $group.find('.invalid-feedback').remove();
+
+                window.onbeforeunload = function (event) {
+                    event.returnValue = 'no';
+                    return 'no';
+                };
+            });
         });
     },
     showPassword: function ($input) {
@@ -287,7 +293,8 @@ var BootstrapFormBuilder = {
 
             $element.on('click', function () {
                 $input.val($element.data('value'));
-                $buttonTextInner.text($element.text())
+                $buttonTextInner.text($element.text());
+                $input.trigger('change');
             });
 
             $menu.append($element);
@@ -378,7 +385,7 @@ var BootstrapFormBuilder = {
                 var $element = $form.find('[name="' + key + '"], [data-ref="' + key + '"]');
                 var $group = $element.closest('.form-group');
 
-                $group.find('.form-control').addClass('is-invalid');
+                $group.find('.form-control, .custom-control-input').addClass('is-invalid');
 
                 // put outside input group if it exists, then try after the form control, then after the last
                 // custom control (checkbox or radio)
