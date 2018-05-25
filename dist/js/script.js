@@ -167,8 +167,8 @@ var BootstrapFormBuilder = {
             $fa.addClass(visible ? 'fa-eye' : 'fa-eye-slash');
         });
 
-        $input.on('change keyup', function () { $plaintextInput.val($input.val()) });
-        $plaintextInput.on('change keyup', function () { $input.val($plaintextInput.val()) });
+        $input.on('change keyup input', function () { $plaintextInput.val($input.val()) });
+        $plaintextInput.on('change keyup input', function () { $input.val($plaintextInput.val()) });
     },
     passwordStrengthMeter: function ($input) {
         var self = this;
@@ -248,7 +248,7 @@ var BootstrapFormBuilder = {
             }
         };
 
-        $inputs.on('change keyup', function () { callback($(this)); }).trigger('change');
+        $inputs.on('change keyup input', function () { callback($(this)); }).trigger('change');
     },
     registerLocale: function (locale, obj) {
         this.translations[locale] = obj;
