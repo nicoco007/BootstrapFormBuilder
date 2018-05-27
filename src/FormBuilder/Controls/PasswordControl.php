@@ -47,6 +47,19 @@ class PasswordControl extends InputControl
         $input->render();
     }
 
+    public function getErrorMessage()
+    {
+        $parent = parent::getErrorMessage();
+
+        if ($parent) return $parent;
+
+        if ($this->isRequired() && $this->minLength > 0 && mb_strlen($this->getValue()) < $this->minLength) {
+            return sprintf($this->translate('Password must be at least %d characters in length.'), $this->minLength);
+        }
+
+        return null;
+    }
+
     /**
      * @param bool $showPasswordStrength
      */
