@@ -25,7 +25,7 @@ class RadioButtonControl extends MultiOptionControl
 {
     public function renderControl()
     {
-        if ($this->getLabel() !== null)
+        if (!Util::stringIsNullOrEmpty($this->getLabel()))
             printf('<label>%s</label>', $this->getLabel());
 
         foreach ($this->getOptions() as $option) {

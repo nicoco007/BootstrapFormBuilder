@@ -34,7 +34,7 @@ abstract class InputControl extends FormControl
 
     public final function renderControl()
     {
-        if ($this->getLabel() !== null)
+        if (!Util::stringIsNullOrEmpty($this->getLabel()))
             printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
 
         $this->renderContents();
