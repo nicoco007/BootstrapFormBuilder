@@ -35,7 +35,7 @@ use FormBuilder\RedirectButton;
 use FormBuilder\SubmitButton;
 use FormBuilder\SuccessResponse;
 
-$form = new Form('Form', 'post');
+$form = new Form('form', 'post', 'Form');
 
 $form->setLocale('fr-ca');
 

@@ -85,8 +85,11 @@ class Form
     {
         $this->translations = new Translations($this->locale);
 
-        if (!isset($this->hasSubmitButton))
-            array_unshift($this->buttons, new SubmitButton());
+        if (!isset($this->hasSubmitButton)) {
+            $button = new SubmitButton();
+            $this->buttons[$button->getId()] = $button;
+            array_unshift($this->buttons, $button);
+        }
 
         foreach ($this->getControls() as $control)
             $control->init();
@@ -269,7 +272,7 @@ class Form
     {
         return isset($_POST['submitted'])
             && isset($this->id) && $_POST['submitted'] === $this->id
-            && isset($_POST['submit']) && in_array($_POST['submit'], array_keys($this->buttons));
+            && isset($_POST['submit']) && in_array($_POST['submit'], array_keys($this->buttons), true);
     }
 
     /**
