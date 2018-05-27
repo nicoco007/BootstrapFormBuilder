@@ -57,6 +57,9 @@ class Form
     /** @var Translations */
     private $translations;
 
+    /** @var string */
+    private $buttonStyle = ButtonStyle::HORIZONTAL;
+
     /**
      * Form constructor.
      * @param string $title
@@ -153,16 +156,33 @@ class Form
             print('</fieldset>');
         }
 
-        print('<div class="form-group">');
+        printf('<div class="form-group form-buttons form-buttons-%s">', $this->buttonStyle);
 
         foreach ($this->buttons as $button) {
+            print('<div class="button-container">');
             $button->render();
-            print(' ');
+            print('</div>');
         }
 
         print('</div>');
 
         print('</form>');
+    }
+
+    /**
+     * @param string $buttonStyle
+     */
+    public function setButtonStyle($buttonStyle)
+    {
+        $possibilities = [ButtonStyle::HORIZONTAL, ButtonStyle::HORIZONTAL_FULL_WIDTH, ButtonStyle::VERTICAL, ButtonStyle::VERTICAL_FULL_WIDTH];
+
+        if (!is_string($buttonStyle))
+            throw new \InvalidArgumentException('Expected $buttonStyle to be string, got ' . Util::getType($buttonStyle));
+
+        if (!in_array($buttonStyle, $possibilities))
+            throw new \InvalidArgumentException(sprintf('Expected $buttonStyle to be one of [%s], got %s.', implode(', ', $possibilities), $buttonStyle));
+
+        $this->buttonStyle = $buttonStyle;
     }
 
     /**

@@ -19,6 +19,7 @@
 require_once '../../vendor/autoload.php';
 
 use FormBuilder\BootstrapClass;
+use FormBuilder\ButtonStyle;
 use FormBuilder\Controls\CheckboxControl;
 use FormBuilder\Controls\DateControl;
 use FormBuilder\Controls\EmailControl;
@@ -128,6 +129,8 @@ $section2->setColumnCount(3);
 
 $form->addSection($section1);
 $form->addSection($section2);
+
+$form->setButtonStyle(ButtonStyle::VERTICAL_FULL_WIDTH);
 
 $submit_button = new SubmitButton();
 

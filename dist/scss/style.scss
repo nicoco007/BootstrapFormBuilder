@@ -117,6 +117,44 @@
       }
     }
   }
+
+  .form-buttons-horizontal, .form-buttons-horizontal-100 {
+    .button-container {
+      display: inline-block;
+    }
+
+    .button-container + .button-container {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .form-buttons-horizontal-100 {
+    display: flex;
+
+    .button-container {
+      flex: 1 0 0;
+
+      .btn {
+        width: 100%;
+      }
+    }
+  }
+
+  .form-buttons-vertical, .form-buttons-vertical-100 {
+    .button-container {
+      display: block;
+    }
+
+    .button-container + .button-container {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .form-buttons-vertical-100 {
+    .button-container .btn {
+      width: 100%;
+    }
+  }
 }
 
 .bsfb-form.js {
