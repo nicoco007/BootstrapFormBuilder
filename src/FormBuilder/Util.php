@@ -180,4 +180,12 @@ class Util
     {
         return str_replace('_', '-', $locale);
     }
+
+    /**
+     * @param string $str
+     * @return string
+     */
+    public static function escape($str) {
+        return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE);
+    }
 }
