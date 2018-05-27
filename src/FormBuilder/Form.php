@@ -85,11 +85,8 @@ class Form
     {
         $this->translations = new Translations($this->locale);
 
-        if (!isset($this->hasSubmitButton)) {
-            $button = new SubmitButton();
-            $this->buttons[$button->getId()] = $button;
-            array_unshift($this->buttons, $button);
-        }
+        if (!isset($this->hasSubmitButton))
+            $this->addButton(new SubmitButton());
 
         foreach ($this->getControls() as $control)
             $control->init();
