@@ -11,7 +11,7 @@
   ],
   "type": "library",
   "require": {
-    "php": ">=5.5",
+    "php": ">=7.1",
     "pomo/pomo": "^1.4",
     "giggsey/libphonenumber-for-php": "^8.9"
   },
