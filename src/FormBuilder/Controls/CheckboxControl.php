@@ -23,6 +23,14 @@ use FormBuilder\HtmlTag;
 
 class CheckboxControl extends FormControl
 {
+    public function __construct($label, $name)
+    {
+        if ($label === null)
+            throw new \InvalidArgumentException('$label cannot be null for RadioButtonControl');
+
+        parent::__construct($label, $name);
+    }
+
     public function renderControl()
     {
         print('<div class="custom-control custom-checkbox">');

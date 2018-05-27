@@ -37,7 +37,8 @@ class DateControl extends FormControl
     {
         $value = $this->getValue() !== null ? $this->getValue()->format($this->translate('m/d/Y', 'date control DateTime format')) : $this->getRawValue();
 
-        printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
+        if ($this->getLabel() !== null)
+            printf('<label for="%s">%s</label>', $this->getName(), $this->getLabel());
 
         $input = new HtmlTag('input', true);
 

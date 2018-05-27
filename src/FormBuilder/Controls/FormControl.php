@@ -65,8 +65,8 @@ abstract class FormControl
      */
     public function __construct($label, $name)
     {
-        if (!is_string($label))
-            throw new \InvalidArgumentException('Expected $label to be string, got ' . Util::getType($label));
+        if ($label !== null && !is_string($label))
+            throw new \InvalidArgumentException('Expected $label to be string or null, got ' . Util::getType($label));
 
         if (!is_string($name))
             throw new \InvalidArgumentException('Expected $name to be string, got ' . Util::getType($name));

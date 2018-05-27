@@ -25,7 +25,8 @@ class SelectControl extends MultiOptionControl
 {
     public function renderControl()
     {
-        printf('<label>%s</label>', $this->getLabel());
+        if ($this->getLabel() !== null)
+            printf('<label>%s</label>', $this->getLabel());
 
         printf('<select class="%s" name="%s">', $this->getClasses(), $this->getName());
 

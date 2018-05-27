@@ -25,7 +25,8 @@ class RadioButtonControl extends MultiOptionControl
 {
     public function renderControl()
     {
-        printf('<label>%s</label>', $this->getLabel());
+        if ($this->getLabel() !== null)
+            printf('<label>%s</label>', $this->getLabel());
 
         foreach ($this->getOptions() as $option) {
             print('<div class="custom-control custom-radio">');
