@@ -30,9 +30,8 @@ class Translations
     {
         $this->mo = new MO();
 
-        while (!file_exists($file = realpath('../../i18n/' . $locale . '.mo')) && strlen($locale) >= 2) {
+        while (!file_exists($file = __DIR__ . '/../../i18n/' . $locale . '.mo') && strlen($locale) > 2)
             $locale = substr($locale, 0, strlen($locale) - 1);
-        }
 
         if (!file_exists($file))
             return;
