@@ -40,10 +40,10 @@ class Form
     private $controls = [];
 
     /** @var FormSection[] */
-    private $sections;
+    private $sections = [];
 
     /** @var Button[] */
-    private $buttons;
+    private $buttons = [];
 
     /** @var bool */
     private $hasSubmitButton;
