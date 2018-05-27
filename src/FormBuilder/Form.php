@@ -131,7 +131,7 @@ class Form
         if ($this->response !== null)
             printf('<div class="alert alert-%s">%s</div>', $this->response->getClass(), $this->response->getMessage());
 
-        printf('<input type="hidden" name="submitted" value="%s"/>', !Util::stringIsNullOrEmpty($this->id) ? $this->id : 'true');
+        printf('<input type="hidden" name="submitted" value="%s"/>', $this->id);
 
         if (count($this->sections) > 0) {
             foreach ($this->sections as $section) {
@@ -260,7 +260,7 @@ class Form
     public function isSubmitted()
     {
         return isset($_POST['submitted'])
-            && ((isset($this->id) && $_POST['submitted'] === $this->id) || $_POST['submitted'] === "true")
+            && isset($this->id) && $_POST['submitted'] === $this->id
             && isset($_POST['submit']) && in_array($_POST['submit'], array_keys($this->buttons));
     }
 
