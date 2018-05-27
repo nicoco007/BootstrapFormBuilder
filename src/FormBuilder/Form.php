@@ -255,6 +255,14 @@ class Form
     }
 
     /**
+     * @return Button[]
+     */
+    public function getButtons()
+    {
+        return $this->buttons;
+    }
+
+    /**
      * @return bool
      */
     public function isSubmitted()
