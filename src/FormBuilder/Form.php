@@ -63,12 +63,22 @@ class Form
      * @param string $method GET or POST
      * @param string $id Form ID (important when there are multiple forms on a single page)
      */
-    public function __construct($title = 'Form', $method = 'GET', $id = null)
+    public function __construct($id, $method = 'GET', $title = null)
     {
+        if (!is_string($id))
+            throw new \InvalidArgumentException('Expected $id to be string, got ' . Util::getType($id));
+
+        $method = strtolower($method);
+
+        if (!in_array($method, ['get', 'post']))
+            throw new \InvalidArgumentException('Expected $method to be either GET or POST, got ' . $method);
+
+        if ($title !== null && !is_string($title))
+            throw new \InvalidArgumentException('Expected $title to be string or null, got ' . Util::getType($id));
+
+        $this->id = $id;
         $this->title = $title;
         $this->method = $method;
-        $this->controls = [];
-        $this->buttons = [];
     }
 
     public function init()
@@ -82,7 +92,7 @@ class Form
             $control->init();
 
         if ($this->isSubmitted()) {
-            /** @var SubmitButton $submit_button */
+            /** @var SubmitButton $submitButton */
             $submitButton = $this->buttons[$_POST['submit']];
             $error = null;
 
@@ -113,7 +123,7 @@ class Form
         if (!$this->init)
             throw new \RuntimeException('Form::init() must be called before rendering');
 
-        printf('<form method="%s" class="bsfb-form" data-locale="%s">', $this->method, Util::getIETFLocale($this->locale));
+        printf('<form id="%s" method="%s" class="bsfb-form" data-locale="%s">', $this->id, $this->method, Util::getIETFLocale($this->locale));
 
         if ($this->title !== null)
             printf('<div class="form-title">%s</div>', $this->title);
