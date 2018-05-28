@@ -120,7 +120,7 @@ var BootstrapFormBuilder = {
                 });
             }
 
-            $form.find('.form-control, .custom-control-input').on('change keyup', function () {
+            $form.find('.form-control, .custom-control-input').on('change keyup input', function () {
                 var $group = $(this).parents('.form-group');
                 var $elements = $group.find('.form-control, .custom-control-input');
 
@@ -366,8 +366,7 @@ var BootstrapFormBuilder = {
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.ajaxError($form, jqXHR, textStatus, errorThrown);
         }).always(function (data) {
-            if (!data['response'] || !data['response']['redirect'])
-                self.ajaxComplete($form, $button);
+            self.ajaxComplete($form, data, $button);
         });
     },
     ajaxSuccess: function ($form, json) {
@@ -417,7 +416,10 @@ var BootstrapFormBuilder = {
     ajaxError: function ($form, jqXHR, textStatus, errorThrown) {
         this.showAlert($form, this.translate('Unable to submit form: ') + errorThrown, 'danger');
     },
-    ajaxComplete: function ($form, $button) {
+    ajaxComplete: function ($form, data, $button) {
+        if (data['success'] === true && data['response'] && data['response']['redirect'])
+            return;
+
         $button.find('i.fa.loader').remove();
         $button.children().first().removeClass('d-none');
 
