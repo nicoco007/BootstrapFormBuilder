@@ -148,14 +148,10 @@ abstract class FormControl
 
     /**
      * @param mixed $value
-     * @param bool $override
      */
-    public final function setValue($value, $override = false)
+    public final function setValue($value)
     {
-        if (!is_bool($override))
-            throw new \InvalidArgumentException('Expected $override to be string, got ' . Util::getType($override));
-
-        if ($this->getValue() == null || $override)
+        if (!$this->parentForm->isSubmitted())
             $this->value = $value;
     }
 
@@ -258,7 +254,8 @@ abstract class FormControl
      * @param null $context
      * @return string
      */
-    protected function translate($str, $context = null) {
+    protected function translate($str, $context = null)
+    {
         return $this->parentForm->getTranslations()->translate($str, $context);
     }
 
@@ -326,7 +323,8 @@ abstract class FormControl
      * @param $value
      * @return string
      */
-    protected function getValueKey($value) {
+    protected function getValueKey($value)
+    {
         return strval($value);
     }
 
@@ -334,7 +332,8 @@ abstract class FormControl
      * @param $value
      * @return string
      */
-    protected function getValueLabel($value) {
+    protected function getValueLabel($value)
+    {
         return strval($value);
     }
 
