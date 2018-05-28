@@ -60,6 +60,9 @@ class Form
     /** @var string */
     private $buttonStyle = ButtonStyle::HORIZONTAL;
 
+    /** @var FormCaptcha */
+    private $captcha;
+
     /**
      * Form constructor.
      * @param string $title
@@ -154,6 +157,18 @@ class Form
 
             print('</div>');
             print('</fieldset>');
+        }
+
+        if ($this->captcha !== null) {
+            print('<div class="form-group">');
+
+            $this->captcha->render();
+
+            if ($this->isSubmitted() && !$this->captcha->validate($_POST['g-recaptcha-response'])) {
+                printf('<div class="invalid-feedback d-block">%s</div>', $this->translations->translate('Please complete the CAPTCHA.'));
+            }
+
+            print('</div>');
         }
 
         printf('<div class="form-group form-buttons form-buttons-%s">', $this->buttonStyle);
@@ -318,6 +333,9 @@ class Form
             }
         }
 
+        if (!$this->captcha->validate($_POST['g-recaptcha-response']))
+            return true;
+
         return false;
     }
 
@@ -357,18 +375,35 @@ class Form
     }
 
     /**
+     * @param string $siteKey
+     * @param string $secretKey
+     */
+    public function setCaptcha($siteKey, $secretKey)
+    {
+        if (!is_string($siteKey))
+            throw new \InvalidArgumentException('Expected $siteKey to be string, got ' . Util::getType($siteKey));
+
+        if (!is_string($secretKey))
+            throw new \InvalidArgumentException('Expected $secretKey to be string, got ' . Util::getType($secretKey));
+
+        $this->captcha = new FormCaptcha($siteKey, $secretKey);
+    }
+
+    /**
      * @param \Exception $ex
      */
     private function printJsonData($ex)
     {
-        $data = [];
+        $data = [
+            'received' => $this->isSubmitted(),
+            'success' => $this->response instanceof SuccessResponse
+        ];
 
-        $data['received'] = $this->isSubmitted();
-        $data['success'] = $this->response instanceof SuccessResponse;
+        if ($this->captcha !== null)
+            $data['recaptcha-validated'] = $this->captcha->validate($_POST['g-recaptcha-response']);
 
-        if ($this->response !== null) {
+        if ($this->response !== null)
             $data['response'] = $this->response->jsonSerialize();
-        }
 
         if ($ex !== null) {
             $data['error'] = [
