@@ -23,6 +23,7 @@ use FormBuilder\ButtonStyle;
 use FormBuilder\Controls\CheckboxControl;
 use FormBuilder\Controls\DateControl;
 use FormBuilder\Controls\EmailControl;
+use FormBuilder\Controls\NumberControl;
 use FormBuilder\Controls\PasswordControl;
 use FormBuilder\Controls\PhoneNumberControl;
 use FormBuilder\Controls\RadioButtonControl;
@@ -56,6 +57,7 @@ $select = new SelectControl('Select a thing', 'select');
 $radio2 = new RadioButtonControl('Radio with default', 'radio2');
 $select2 = new SelectControl('Select with default', 'select2');
 $tel = new PhoneNumberControl('Phone number', 'tel');
+$number = new NumberControl('Number', 'num');
 
 $text_control->setPlaceholder('Enter name');
 $email_control->setPlaceholder('Enter email');
@@ -119,6 +121,7 @@ $section2->addControl($select2);
 $section2->addControl($tel);
 $section2->addControl($text2);
 $section2->addControl($text2);
+$section2->addControl($number);
 
 $radio->setColumnSpan(2);
 
