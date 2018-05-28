@@ -30,4 +30,5 @@ class BootstrapClass
     const LIGHT = 'light';
     const DARK = 'dark';
     const MUTED = 'muted';
+    const LINK = 'link';
 }
