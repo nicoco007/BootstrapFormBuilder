@@ -164,7 +164,7 @@ class Form
 
             $this->captcha->render();
 
-            if ($this->isSubmitted() && !$this->captcha->validate($_POST['g-recaptcha-response'])) {
+            if ($this->isSubmitted() && $this->validateCaptcha()) {
                 printf('<div class="invalid-feedback d-block">%s</div>', $this->translations->translate('Please complete the CAPTCHA.'));
             }
 
@@ -333,7 +333,7 @@ class Form
             }
         }
 
-        if (!$this->captcha->validate($_POST['g-recaptcha-response']))
+        if (!$this->validateCaptcha())
             return true;
 
         return false;
@@ -400,7 +400,7 @@ class Form
         ];
 
         if ($this->captcha !== null)
-            $data['recaptcha-validated'] = $this->captcha->validate($_POST['g-recaptcha-response']);
+            $data['recaptcha-validated'] = $this->validateCaptcha();
 
         if ($this->response !== null)
             $data['response'] = $this->response->jsonSerialize();
@@ -423,5 +423,15 @@ class Form
         header('Content-Type: application/json');
         print(json_encode($data));
         exit(0);
+    }
+
+    private function validateCaptcha() {
+        if ($this->captcha === null)
+            return true;
+
+        if (!isset($_POST['g-recaptcha-response']))
+            return false;
+
+        return $this->captcha->validate($_POST['g-recaptcha-response']);
     }
 }

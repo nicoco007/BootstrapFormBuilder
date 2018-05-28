@@ -339,12 +339,12 @@ var BootstrapFormBuilder = {
 
         data[$button.attr('name')] = $button.val();
 
+        $form.find('.invalid-feedback').remove();
+
         $form.find('input, textarea, select, button[type="button"]').each(function () {
             var $input = $(this);
-            var $group = $input.parents('.form-group');
 
             $input.removeClass('is-invalid');
-            $group.find('.invalid-feedback').remove();
 
             if ($input.attr('type') === 'checkbox') {
                 data[$input.attr('name')] = $input.prop('checked') ? "on" : null;
@@ -405,9 +405,13 @@ var BootstrapFormBuilder = {
                 window.location = json['response']['redirect'];
             else
                 this.showAlert($form, json['response']['message'], json['response']['class'], json['response']['icon']);
-        } else {
+        } else if (json['recaptcha-validate'] !== true) {
+            $form.find('.g-recaptcha').after('<div class="invalid-feedback d-block">' + this.translate('Please complete the CAPTCHA.') + '</div>');
+        } else if (json['success'] === true) {
             this.showAlert($form, this.translate('Form submitted successfully.'), 'success');
             window.onbeforeunload = null;
+        } else {
+            this.showAlert($form, this.translate('Unexpected server response. Please try again later.'), 'danger');
         }
     },
     ajaxError: function ($form, jqXHR, textStatus, errorThrown) {
@@ -429,6 +433,9 @@ var BootstrapFormBuilder = {
 
         $form.find('fieldset, button').prop('disabled', false);
         $form.find('a').removeClass('disabled');
+
+        if (window.grecaptcha)
+            grecaptcha.reload();
     },
     showAlert: function ($form, msg, msgClass, icon) {
         var $title = $form.find('.form-title');
