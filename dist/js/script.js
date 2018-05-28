@@ -356,19 +356,18 @@ var BootstrapFormBuilder = {
             }
         });
 
+        // noinspection JSCheckFunctionSignatures
         $.ajax({
             method: $form.attr('method'),
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: data,
-            success: function (json) {
-                self.ajaxSuccess($form, json);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                self.ajaxError($form, jqXHR, textStatus, errorThrown);
-            },
-            complete: function () {
+            data: data
+        }).done(function (json) {
+            self.ajaxSuccess($form, json);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            self.ajaxError($form, jqXHR, textStatus, errorThrown);
+        }).always(function (data) {
+            if (!data['response'] || !data['response']['redirect'])
                 self.ajaxComplete($form, $button);
-            }
         });
     },
     ajaxSuccess: function ($form, json) {
@@ -399,13 +398,13 @@ var BootstrapFormBuilder = {
                 this.showAlert($form, this.translate('An unexpected server-side error occured. Please try again later.'), 'danger')
             }
         } else if (json['response']) {
-            this.showAlert($form, json['response']['message'], json['response']['class'], json['response']['icon']);
-
             if (json['success'])
                 window.onbeforeunload = null;
 
             if (json['response']['redirect'])
                 window.location = json['response']['redirect'];
+            else
+                this.showAlert($form, json['response']['message'], json['response']['class'], json['response']['icon']);
         } else {
             this.showAlert($form, this.translate('Form submitted successfully.'), 'success');
             window.onbeforeunload = null;
