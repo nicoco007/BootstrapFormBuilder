@@ -27,27 +27,31 @@ class FormCaptcha
     /** @var string */
     private $secretKey;
 
+    /** @var string */
+    private $size;
+
     /** @var bool */
     private $validationCache = null;
 
-    public function __construct($siteKey, $secretKey)
+    public function __construct(string $siteKey, string $secretKey)
     {
-        if (!is_string($siteKey))
-            throw new \InvalidArgumentException('Expected $siteKey to be string, got ' . Util::getType($siteKey));
-
-        if (!is_string($secretKey))
-            throw new \InvalidArgumentException('Expected $secretKey to be string, got ' . Util::getType($secretKey));
-
         $this->siteKey = $siteKey;
         $this->secretKey = $secretKey;
     }
 
     public function render()
     {
-        printf('<div class="g-recaptcha" data-sitekey="%s"></div>', $this->siteKey);
+        $captcha = new HtmlTag('div');
+        $captcha->addAttribute('class', 'g-recaptcha');
+        $captcha->addAttribute('data-sitekey', $this->siteKey);
+
+        if ($this->size !== null)
+            $captcha->addAttribute('data-size', $this->size);
+
+        $captcha->render();
     }
 
-    public function validate($value)
+    public function validate(string $value)
     {
         if ($this->validationCache === null) {
             $ch = curl_init();
@@ -69,5 +73,13 @@ class FormCaptcha
         }
 
         return $this->validationCache;
+    }
+
+    /**
+     * @param string $size
+     */
+    public function setSize(string $size)
+    {
+        $this->size = $size;
     }
 }
