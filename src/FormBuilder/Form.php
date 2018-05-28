@@ -314,18 +314,10 @@ class Form
      */
     public function hasError(): bool
     {
-        if ($this->isSubmitted()) {
-            if (count($this->sections) > 0) {
-                foreach ($this->sections as $section)
-                    foreach ($section->getControls() as $control)
-                        if ($control->hasError())
-                            return true;
-            } else {
-                foreach ($this->controls as $control)
-                    if ($control->hasError())
-                        return true;
-            }
-        }
+        if ($this->isSubmitted())
+            foreach ($this->getControls(true) as $control)
+                if ($control->hasError())
+                    return true;
 
         if (!$this->validateCaptcha())
             return true;
