@@ -69,18 +69,12 @@ class Form
      * @param string $method GET or POST
      * @param string $id Form ID (important when there are multiple forms on a single page)
      */
-    public function __construct($id, $method = 'GET', $title = null)
+    public function __construct(string $id, string $method = 'GET', string $title = null)
     {
-        if (!is_string($id))
-            throw new \InvalidArgumentException('Expected $id to be string, got ' . Util::getType($id));
-
         $method = strtolower($method);
 
         if (!in_array($method, ['get', 'post']))
             throw new \InvalidArgumentException('Expected $method to be either GET or POST, got ' . $method);
-
-        if ($title !== null && !is_string($title))
-            throw new \InvalidArgumentException('Expected $title to be string or null, got ' . Util::getType($id));
 
         $this->id = $id;
         $this->title = $title;
@@ -187,7 +181,7 @@ class Form
     /**
      * @param string $buttonStyle
      */
-    public function setButtonStyle($buttonStyle)
+    public function setButtonStyle(string $buttonStyle)
     {
         $possibilities = [ButtonStyle::HORIZONTAL, ButtonStyle::HORIZONTAL_FULL_WIDTH, ButtonStyle::VERTICAL, ButtonStyle::VERTICAL_FULL_WIDTH];
 
@@ -203,7 +197,7 @@ class Form
     /**
      * @param Controls\FormControl $control
      */
-    public function addControl($control)
+    public function addControl(Controls\FormControl $control)
     {
         if (!($control instanceof Controls\FormControl))
             throw new \InvalidArgumentException('Expected $control to be instance of FormControl, got ' . Util::getType($control));
@@ -223,7 +217,7 @@ class Form
      * @param bool $deep
      * @return Controls\FormControl[]
      */
-    public function getControls($deep = false)
+    public function getControls(bool $deep = false): array
     {
         /** @var Controls\FormControl[] $controls */
         $controls = [];
@@ -246,7 +240,7 @@ class Form
     /**
      * @param FormSection $section
      */
-    public function addSection($section)
+    public function addSection(FormSection $section)
     {
         if (!($section instanceof FormSection))
             throw new \InvalidArgumentException('Expected $section to be instance of FormSection, got ' . Util::getType($section));
@@ -265,7 +259,7 @@ class Form
     /**
      * @return FormSection[]
      */
-    public function getSections()
+    public function getSections(): array
     {
         return $this->sections;
     }
@@ -273,7 +267,7 @@ class Form
     /**
      * @param Button $button
      */
-    public function addButton($button)
+    public function addButton(Button $button)
     {
         if (!($button instanceof Button))
             throw new \InvalidArgumentException('Expected $button to be instance of Button, got ' . Util::getType($button));
@@ -292,7 +286,7 @@ class Form
     /**
      * @return Button[]
      */
-    public function getButtons()
+    public function getButtons(): array
     {
         return $this->buttons;
     }
@@ -300,7 +294,7 @@ class Form
     /**
      * @return bool
      */
-    public function isSubmitted()
+    public function isSubmitted(): bool
     {
         return isset($_POST['submitted'])
             && isset($this->id) && $_POST['submitted'] === $this->id
@@ -310,15 +304,15 @@ class Form
     /**
      * @return bool
      */
-    public function isAjaxSubmit()
+    public function isAjaxSubmit(): bool
     {
         return isset($_POST['ajax_submit']) && boolval($_POST['ajax_submit']) === true;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function hasError()
+    public function hasError(): bool
     {
         if ($this->isSubmitted()) {
             if (count($this->sections) > 0) {
@@ -342,7 +336,7 @@ class Form
     /**
      * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -350,7 +344,7 @@ class Form
     /**
      * @param int $columnCount
      */
-    public function setColumnCount($columnCount)
+    public function setColumnCount(int $columnCount)
     {
         if ($columnCount < 1 || $columnCount > 4)
             throw new \InvalidArgumentException('$columnCount must be between 1 and 4');
@@ -361,7 +355,7 @@ class Form
     /**
      * @param string $locale
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale)
     {
         $this->locale = $locale;
     }
@@ -369,30 +363,23 @@ class Form
     /**
      * @return Translations
      */
-    public function getTranslations()
+    public function getTranslations(): Translations
     {
         return $this->translations;
     }
 
     /**
-     * @param string $siteKey
-     * @param string $secretKey
+     * @param FormCaptcha $captcha
      */
-    public function setCaptcha($siteKey, $secretKey)
+    public function setCaptcha(FormCaptcha $captcha)
     {
-        if (!is_string($siteKey))
-            throw new \InvalidArgumentException('Expected $siteKey to be string, got ' . Util::getType($siteKey));
-
-        if (!is_string($secretKey))
-            throw new \InvalidArgumentException('Expected $secretKey to be string, got ' . Util::getType($secretKey));
-
-        $this->captcha = new FormCaptcha($siteKey, $secretKey);
+        $this->captcha = $captcha;
     }
 
     /**
      * @param \Exception $ex
      */
-    private function printJsonData($ex)
+    private function printJsonData(\Exception $ex)
     {
         $data = [
             'received' => $this->isSubmitted(),
@@ -425,7 +412,8 @@ class Form
         exit(0);
     }
 
-    private function validateCaptcha() {
+    private function validateCaptcha(): bool
+    {
         if ($this->captcha === null)
             return true;
 
