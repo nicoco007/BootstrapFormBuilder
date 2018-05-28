@@ -379,7 +379,7 @@ class Form
     /**
      * @param \Exception $ex
      */
-    private function printJsonData(\Exception $ex)
+    private function printJsonData(?\Exception $ex)
     {
         $data = [
             'received' => $this->isSubmitted(),
