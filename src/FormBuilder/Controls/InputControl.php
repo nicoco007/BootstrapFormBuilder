@@ -30,7 +30,7 @@ abstract class InputControl extends FormControl
     /** @var string */
     private $placeholder;
 
-    abstract function renderContents();
+    public abstract function renderContents();
 
     public final function renderControl()
     {
