@@ -77,10 +77,8 @@ abstract class FormControl
 
     public function render()
     {
-        print('<div class="control-group">');
-
         $tag = new HtmlTag('div', true);
-        $tag->addAttribute('class', 'form-group');
+        $tag->addAttribute('class', 'control-group');
 
         if ($this->requiredParentValue) {
             $tag->addAttribute('data-parent', $this->parent->getName());
@@ -88,6 +86,8 @@ abstract class FormControl
         }
 
         $tag->render();
+
+        print('<div class="form-group">');
 
         if ($this->requiredParentValue) {
             print('<div class="child-message">');
