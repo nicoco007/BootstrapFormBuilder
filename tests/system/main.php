@@ -149,7 +149,7 @@ $submit_button->setSubmitCallback(function ($controls) {
 
 $other = new SubmitButton('Do something else', 'other', 'plane', BootstrapClass::SECONDARY);
 
-$other->setSubmitCallback(function ($controls) {
+$other->setSubmitCallback(function () {
     return new ErrorResponse('This always does absolutely nothing!');
 });
 
@@ -194,6 +194,7 @@ function parseVal($val)
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.15/css/intlTelInput.css"
           integrity="sha256-Q35kn/SM+AW5mosKvh9cdofWZ2XZQECPFULVWv4LB6U=" crossorigin="anonymous"/>
     <link rel="stylesheet" href="../../dist/css/style.min.css"/>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 <div class="container">
