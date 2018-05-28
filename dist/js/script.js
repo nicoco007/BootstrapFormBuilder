@@ -435,7 +435,7 @@ var BootstrapFormBuilder = {
         $form.find('a').removeClass('disabled');
 
         if (window.grecaptcha)
-            grecaptcha.reload();
+            grecaptcha.reset();
     },
     showAlert: function ($form, msg, msgClass, icon) {
         var $title = $form.find('.form-title');
