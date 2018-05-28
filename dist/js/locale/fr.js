@@ -24,5 +24,6 @@ BootstrapFormBuilder.registerLocale("fr", {
     "Names and surnames by themselves are easy to guess": "Les noms tout seuls sont faciles à deviner",
     "Common names and surnames are easy to guess": "Les noms communs et les noms propres sont faciles à deviner",
     "Unexpected server response. Please try again later.": "Réponse serveur inattendue. Veuillez réessayer plus tard.",
-    "Please complete the CAPTCHA.": "Veuillez compléter le CAPTCHA."
+    "Please complete the CAPTCHA.": "Veuillez compléter le CAPTCHA.",
+    "The form has not been saved. Are you sure you want to leave?": "Le formulaire n'a pas été enregistré. Êtes-vous sûr de vouloir quitter la page?"
 });

@@ -63,6 +63,9 @@ class Form
     /** @var FormCaptcha */
     private $captcha;
 
+    /** @var bool */
+    private $promptOnLeave = true;
+
     /**
      * Form constructor.
      * @param string $title
@@ -123,7 +126,7 @@ class Form
         if (!$this->init)
             throw new \RuntimeException('Form::init() must be called before rendering');
 
-        printf('<form id="%s" method="%s" class="bsfb-form" data-locale="%s">', $this->id, $this->method, Util::getIETFLocale($this->locale));
+        printf('<form id="%s" method="%s" class="bsfb-form" data-locale="%s" data-prompt-on-leave="%s">', $this->id, $this->method, Util::getIETFLocale($this->locale), $this->promptOnLeave ? 'true' : 'false');
 
         if ($this->title !== null)
             printf('<div class="form-title">%s</div>', $this->title);
@@ -366,6 +369,14 @@ class Form
     public function setCaptcha(FormCaptcha $captcha)
     {
         $this->captcha = $captcha;
+    }
+
+    /**
+     * @param bool $promptOnLeave
+     */
+    public function setPromptOnLeave(bool $promptOnLeave): void
+    {
+        $this->promptOnLeave = $promptOnLeave;
     }
 
     /**
