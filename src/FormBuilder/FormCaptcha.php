@@ -67,11 +67,15 @@ class FormCaptcha
 
             $response = curl_exec($ch);
 
-            $json = json_decode($response, true);
-
-            $this->validationCache = $json['success'] === true;
+            $this->validationCache = json_decode($response, true);
         }
 
+        return $this->validationCache['success'] === true;
+    }
+
+    public function getResponse(string $value)
+    {
+        $this->validate($value);
         return $this->validationCache;
     }
 

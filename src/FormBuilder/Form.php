@@ -390,7 +390,7 @@ class Form
         ];
 
         if ($this->captcha !== null)
-            $data['recaptcha-validated'] = $this->validateCaptcha();
+            $data['recaptcha'] = $this->captcha->getResponse($_POST['g-recaptcha-response']);
 
         if ($this->response !== null)
             $data['response'] = $this->response->jsonSerialize();

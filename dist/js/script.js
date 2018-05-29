@@ -398,7 +398,7 @@ var BootstrapFormBuilder = {
             } else {
                 this.showAlert($form, this.translate('An unexpected server-side error occured. Please try again later.'), 'danger')
             }
-        } else if (json['recaptcha-validate'] !== true) {
+        } else if (json['recaptcha'] && json['recaptcha']['success'] !== true) {
             $form.find('.g-recaptcha').after('<div class="invalid-feedback d-block">' + this.translate('Please complete the CAPTCHA.') + '</div>');
         } else if (json['response']) {
             if (json['success'])
