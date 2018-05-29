@@ -53,6 +53,16 @@ class FormCaptcha
 
     public function validate(string $value)
     {
+        $response = $this->getResponse($value);
+
+        if (!is_array($response))
+            return false;
+
+        return $response['success'] === true;
+    }
+
+    public function getResponse(string $value)
+    {
         if ($this->validationCache === null) {
             $ch = curl_init();
 
@@ -70,12 +80,6 @@ class FormCaptcha
             $this->validationCache = json_decode($response, true);
         }
 
-        return $this->validationCache['success'] === true;
-    }
-
-    public function getResponse(string $value)
-    {
-        $this->validate($value);
         return $this->validationCache;
     }
 
