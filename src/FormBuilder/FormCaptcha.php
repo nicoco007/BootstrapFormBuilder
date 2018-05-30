@@ -51,9 +51,17 @@ class FormCaptcha
         $captcha->render();
     }
 
+    /**
+     * @param string $value
+     * @return bool
+     */
     public function validate(string $value)
     {
-        $response = $this->getResponse($value);
+        try {
+            $response = $this->getResponse($value);
+        } catch (\Exception $ex) {
+            return false;
+        }
 
         if (!is_array($response))
             return false;
@@ -61,10 +69,18 @@ class FormCaptcha
         return $response['success'] === true;
     }
 
+    /**
+     * @param string $value
+     * @return bool|mixed
+     * @throws \Exception
+     */
     public function getResponse(string $value)
     {
         if ($this->validationCache === null) {
             $ch = curl_init();
+
+            if ($ch === false)
+                throw new \Exception('Failed to initialize cURL');
 
             curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -76,6 +92,9 @@ class FormCaptcha
             ]));
 
             $response = curl_exec($ch);
+
+            if ($response === false)
+                throw new \Exception(curl_error($ch), curl_errno($ch));
 
             $this->validationCache = json_decode($response, true);
         }

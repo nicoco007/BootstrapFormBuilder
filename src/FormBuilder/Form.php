@@ -380,29 +380,35 @@ class Form
     }
 
     /**
-     * @param \Exception $ex
+     * @param \Exception $error
      */
-    private function printJsonData(?\Exception $ex)
+    private function printJsonData(?\Exception $error)
     {
         $data = [
             'received' => $this->isSubmitted(),
             'success' => $this->response instanceof SuccessResponse
         ];
 
-        if ($this->captcha !== null)
-            $data['recaptcha'] = $this->captcha->getResponse($_POST['g-recaptcha-response']);
+        if ($this->captcha !== null) {
+            try {
+                $data['recaptcha'] = $this->captcha->getResponse($_POST['g-recaptcha-response']);
+            } catch (\Exception $ex) {
+                if ($error === null)
+                    $error = $ex;
+            }
+        }
 
         if ($this->response !== null)
             $data['response'] = $this->response->jsonSerialize();
 
-        if ($ex !== null) {
+        if ($error !== null) {
             $data['error'] = [
-                'type' => get_class($ex),
-                'message' => $ex->getMessage(),
-                'code' => $ex->getCode(),
-                'line' => $ex->getLine(),
-                'file' => $ex->getFile(),
-                'trace' => $ex->getTrace()
+                'type' => get_class($error),
+                'message' => $error->getMessage(),
+                'code' => $error->getCode(),
+                'line' => $error->getLine(),
+                'file' => $error->getFile(),
+                'trace' => $error->getTrace()
             ];
         }
 
