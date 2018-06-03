@@ -101,10 +101,17 @@ class Form
             /** @var SubmitButton $submitButton */
             $submitButton = $this->buttons[$_POST['submit']];
             $error = null;
+            $values = [];
+
+            foreach ($this->getControls(true) as $control)
+                $values[$control->getName()] = $control->getValue();
+
+            foreach ($this->getHiddenValues() as $value)
+                $values[$value->getName()] = $value->getValue();
 
             if (!$this->hasError()) {
                 try {
-                    $this->response = $submitButton->submitCallback($this->getControls(true));
+                    $this->response = $submitButton->submitCallback($values);
                     $submitButton->successCallback();
                 } catch (\Exception $ex) {
                     $error = $ex;

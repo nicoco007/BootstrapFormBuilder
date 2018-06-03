@@ -68,15 +68,15 @@ class SubmitButton extends Button
     }
 
     /**
-     * @param Controls\FormControl[] $controls
+     * @param array $values
      * @return Response
      */
-    public function submitCallback($controls)
+    public function submitCallback($values)
     {
         $response = null;
 
         if ($this->submitCallback !== null)
-            $response = call_user_func($this->submitCallback, $controls);
+            $response = call_user_func($this->submitCallback, $values);
 
         return $response !== null ? $response : new SuccessResponse($this->translate('Form submitted successfully.'));
     }
