@@ -66,6 +66,9 @@ class Form
     /** @var FormCaptcha */
     private $captcha;
 
+    /** @var bool */
+    private $promptOnLeave = true;
+
     /**
      * Form constructor.
      * @param string $title
@@ -126,7 +129,7 @@ class Form
         if (!$this->init)
             throw new \RuntimeException('Form::init() must be called before rendering');
 
-        printf('<form id="%s" method="%s" class="bsfb-form" data-locale="%s">', $this->id, $this->method, Util::getIETFLocale($this->locale));
+        printf('<form id="%s" method="%s" class="bsfb-form" data-locale="%s" data-prompt-on-leave="%s">', $this->id, $this->method, Util::getIETFLocale($this->locale), $this->promptOnLeave ? 'true' : 'false');
 
         if ($this->title !== null)
             printf('<div class="form-title">%s</div>', $this->title);
@@ -383,29 +386,43 @@ class Form
     }
 
     /**
-     * @param \Exception $ex
+     * @param bool $promptOnLeave
      */
-    private function printJsonData(?\Exception $ex)
+    public function setPromptOnLeave(bool $promptOnLeave): void
+    {
+        $this->promptOnLeave = $promptOnLeave;
+    }
+
+    /**
+     * @param \Exception $error
+     */
+    private function printJsonData(?\Exception $error)
     {
         $data = [
             'received' => $this->isSubmitted(),
             'success' => $this->response instanceof SuccessResponse
         ];
 
-        if ($this->captcha !== null)
-            $data['recaptcha-validated'] = $this->validateCaptcha();
+        if ($this->captcha !== null) {
+            try {
+                $data['recaptcha'] = $this->captcha->getResponse($_POST['g-recaptcha-response']);
+            } catch (\Exception $ex) {
+                if ($error === null)
+                    $error = $ex;
+            }
+        }
 
         if ($this->response !== null)
             $data['response'] = $this->response->jsonSerialize();
 
-        if ($ex !== null) {
+        if ($error !== null) {
             $data['error'] = [
-                'type' => get_class($ex),
-                'message' => $ex->getMessage(),
-                'code' => $ex->getCode(),
-                'line' => $ex->getLine(),
-                'file' => $ex->getFile(),
-                'trace' => $ex->getTrace()
+                'type' => get_class($error),
+                'message' => $error->getMessage(),
+                'code' => $error->getCode(),
+                'line' => $error->getLine(),
+                'file' => $error->getFile(),
+                'trace' => $error->getTrace()
             ];
         }
 

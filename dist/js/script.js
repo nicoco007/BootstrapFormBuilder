@@ -127,10 +127,12 @@ var BootstrapFormBuilder = {
                 $elements.removeClass('is-invalid');
                 $group.find('.invalid-feedback').remove();
 
-                window.onbeforeunload = function (event) {
-                    event.returnValue = 'no';
-                    return 'no';
-                };
+                if ($form.data('prompt-on-leave') === true) {
+                    window.onbeforeunload = function (event) {
+                        event.returnValue = self.translate('The form has not been saved. Are you sure you want to leave?');
+                        return self.translate('The form has not been saved. Are you sure you want to leave?');
+                    };
+                }
             });
         });
     },
@@ -396,6 +398,8 @@ var BootstrapFormBuilder = {
             } else {
                 this.showAlert($form, this.translate('An unexpected server-side error occured. Please try again later.'), 'danger')
             }
+        } else if (json['recaptcha'] && json['recaptcha']['success'] !== true) {
+            $form.find('.g-recaptcha').after('<div class="invalid-feedback d-block">' + this.translate('Please complete the CAPTCHA.') + '</div>');
         } else if (json['response']) {
             if (json['success'])
                 window.onbeforeunload = null;
@@ -404,8 +408,6 @@ var BootstrapFormBuilder = {
                 window.location = json['response']['redirect'];
             else
                 this.showAlert($form, json['response']['message'], json['response']['class'], json['response']['icon']);
-        } else if (json['recaptcha-validate'] !== true) {
-            $form.find('.g-recaptcha').after('<div class="invalid-feedback d-block">' + this.translate('Please complete the CAPTCHA.') + '</div>');
         } else if (json['success'] === true) {
             this.showAlert($form, this.translate('Form submitted successfully.'), 'success');
             window.onbeforeunload = null;
