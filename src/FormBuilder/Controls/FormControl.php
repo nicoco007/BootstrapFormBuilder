@@ -21,6 +21,7 @@ namespace FormBuilder\Controls;
 
 use FormBuilder\Form;
 use FormBuilder\HtmlTag;
+use FormBuilder\InvalidOperationException;
 use FormBuilder\Util;
 
 abstract class FormControl
@@ -151,6 +152,9 @@ abstract class FormControl
      */
     public final function setValue($value)
     {
+        if (!($this->parentForm instanceof Form))
+            throw new InvalidOperationException('Instance of FormControl must be added to form before calling FormControl::setValue');
+
         if (!$this->parentForm->isSubmitted())
             $this->value = $value;
     }

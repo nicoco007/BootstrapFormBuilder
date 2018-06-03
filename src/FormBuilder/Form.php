@@ -45,6 +45,9 @@ class Form
     /** @var Button[] */
     private $buttons = [];
 
+    /** @var HiddenValue[] */
+    private $hiddenValues = [];
+
     /** @var bool */
     private $hasSubmitButton;
 
@@ -132,6 +135,10 @@ class Form
             printf('<div class="alert alert-%s">%s</div>', $this->response->getClass(), $this->response->getMessage());
 
         printf('<input type="hidden" name="submitted" value="%s"/>', $this->id);
+
+        foreach ($this->getHiddenValues() as $value) {
+            $value->render();
+        }
 
         if (count($this->sections) > 0) {
             foreach ($this->sections as $section) {
@@ -368,6 +375,13 @@ class Form
         $this->captcha = $captcha;
     }
 
+    public function addHiddenValue(string $name, string $value) {
+        if (isset($this->hiddenValues[$name]))
+            throw new \RuntimeException(sprintf('Value with name "%s" already exists', $name));
+
+        $this->hiddenValues[$name] = new HiddenValue($name, $value);
+    }
+
     /**
      * @param \Exception $ex
      */
@@ -413,5 +427,13 @@ class Form
             return false;
 
         return $this->captcha->validate($_POST['g-recaptcha-response']);
+    }
+
+    /**
+     * @return HiddenValue[]
+     */
+    private function getHiddenValues(): array
+    {
+        return $this->hiddenValues;
     }
 }

@@ -23,6 +23,7 @@ use FormBuilder\ButtonStyle;
 use FormBuilder\Controls\CheckboxControl;
 use FormBuilder\Controls\DateControl;
 use FormBuilder\Controls\EmailControl;
+use FormBuilder\Controls\HiddenControl;
 use FormBuilder\Controls\NumberControl;
 use FormBuilder\Controls\PasswordControl;
 use FormBuilder\Controls\PhoneNumberControl;
@@ -134,6 +135,8 @@ $form->addSection($section1);
 $form->addSection($section2);
 
 $form->setButtonStyle(ButtonStyle::VERTICAL_FULL_WIDTH);
+
+$form->addHiddenValue('hidden', 'garfunkel');
 
 $submit_button = new SubmitButton();
 
