@@ -306,7 +306,7 @@ abstract class FormControl
 
         if ($deep)
             foreach ($this->children as $child)
-                $controls += $child->getChildren();
+                $controls += $child->getChildren(true);
 
         return $controls;
     }

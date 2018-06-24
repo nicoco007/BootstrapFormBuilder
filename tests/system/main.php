@@ -124,6 +124,34 @@ $section2->addControl($text2);
 $section2->addControl($text2);
 $section2->addControl($number);
 
+$section3 = new FormSection('Section III');
+
+$radio3 = new RadioButtonControl('Root', 'root');
+$textarea2 = new TextAreaControl('Child 1', 'child1');
+$radio4 = new RadioButtonControl('Child 2', 'child2');
+$radio5 = new RadioButtonControl('Child 3', 'child3');
+$textarea3 = new TextAreaControl('Child 4', 'child4');
+
+$radio3->addOption('Yes', 'yes');
+$radio3->addOption('No', 'no');
+$radio4->addOption('Yes', 'yes');
+$radio4->addOption('No', 'no');
+$radio5->addOption('Yes', 'yes');
+$radio5->addOption('No', 'no');
+
+$radio3->setRequired(true);
+$textarea2->setRequired(true);
+$radio4->setRequired(true);
+$radio5->setRequired(true);
+$textarea3->setRequired(true);
+
+$radio5->addChild($textarea3);
+$radio4->addChild($radio5);
+$radio3->addChild($textarea2);
+$radio3->addChild($radio4);
+
+$section3->addControl($radio3);
+
 $radio->setColumnSpan(2);
 
 $password_control->setShowPasswordStrength(true);
@@ -133,8 +161,7 @@ $section2->setColumnCount(3);
 
 $form->addSection($section1);
 $form->addSection($section2);
-
-$form->setButtonStyle(ButtonStyle::VERTICAL_FULL_WIDTH);
+$form->addSection($section3);
 
 $form->addHiddenValue('hidden', 'garfunkel');
 
