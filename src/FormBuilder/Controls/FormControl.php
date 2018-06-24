@@ -152,11 +152,7 @@ abstract class FormControl
      */
     public final function setValue($value)
     {
-        if (!($this->parentForm instanceof Form))
-            throw new InvalidOperationException('Instance of FormControl must be added to form before calling FormControl::setValue');
-
-        if (!$this->parentForm->isSubmitted())
-            $this->value = $value;
+        $this->value = $value;
     }
 
     /**
