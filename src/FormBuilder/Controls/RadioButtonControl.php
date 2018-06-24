@@ -42,7 +42,7 @@ class RadioButtonControl extends MultiOptionControl
             $input->addAttribute('value', $option->getKey());
             $input->addAttribute('class', $this->getClasses());
 
-            if (($this->getSubmittedKey() === null && $option->isDefault()) || $option->getKey() === $this->getSubmittedKey())
+            if (($this->getSubmittedKey() === null && $this->getValue() === null && $option->isDefault()) || $this->getValue() === $option->getValue() || $option->getKey() === $this->getSubmittedKey())
                 $input->addAttribute('checked');
 
             $input->render();
