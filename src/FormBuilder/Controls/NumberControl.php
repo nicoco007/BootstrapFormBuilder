@@ -23,9 +23,17 @@ use FormBuilder\Util;
 
 class NumberControl extends InputControl
 {
+    private $icon;
+
     public function renderContents()
     {
+        print('<div class="input-group">');
+
+        if ($this->icon !== null)
+            printf('<span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-%s"></i></span></span>', $this->icon);
+
         printf('<input type="number" class="%1$s" id="%2$s" name="%2$s" placeholder="%3$s" value="%4$d"/>', $this->getClasses(), $this->getName(), $this->getPlaceholder(), $this->getValue());
+        print('</div>');
     }
 
     public function getType()
@@ -39,5 +47,9 @@ class NumberControl extends InputControl
             return intval($_POST[$this->getName()]);
 
         return null;
+    }
+
+    public function setIcon(string $icon) {
+        $this->icon = $icon;
     }
 }

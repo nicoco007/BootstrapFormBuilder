@@ -60,6 +60,8 @@ $select2 = new SelectControl('Select with default', 'select2');
 $tel = new PhoneNumberControl('Phone number', 'tel');
 $number = new NumberControl('Number', 'num');
 
+$number->setIcon('dollar-sign');
+
 $text_control->setPlaceholder('Enter name');
 $email_control->setPlaceholder('Enter email');
 $password_control->setPlaceholder('Enter password');
