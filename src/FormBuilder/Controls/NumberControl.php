@@ -84,6 +84,8 @@ class NumberControl extends InputControl
 
         if ($this->getValue() !== null && $this->getValue() > $this->max)
             return sprintf($this->translate('Please enter a number that is no more than %d.'), $this->max);
+
+        return null;
     }
 
     public function setIcon(string $icon) {
