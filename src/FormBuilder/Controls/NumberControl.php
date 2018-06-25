@@ -44,7 +44,7 @@ class NumberControl extends InputControl
     protected function parseValueFromPost()
     {
         if (isset($_POST[$this->getName()]) && !Util::stringIsNullOrEmpty($_POST[$this->getName()]))
-            return intval($_POST[$this->getName()]);
+            return doubleval($_POST[$this->getName()]);
 
         return null;
     }
