@@ -61,6 +61,9 @@ $tel = new PhoneNumberControl('Phone number', 'tel');
 $number = new NumberControl('Number', 'num');
 
 $number->setIcon('dollar-sign');
+$number->setMin(0);
+$number->setMax(100);
+$number->setStep(0.05);
 
 $text_control->setPlaceholder('Enter name');
 $email_control->setPlaceholder('Enter email');
