@@ -43,7 +43,7 @@ class NumberControl extends InputControl
         $input->addAttribute('id', $this->getName());
         $input->addAttribute('name', $this->getName());
         $input->addAttribute('placeholder', $this->getPlaceholder());
-        $input->addAttribute('value', $this->getValue());
+        $input->addAttribute('value', strval($this->getValue()));
 
         if ($this->step !== null)
             $input->addAttribute('step', strval($this->step));
