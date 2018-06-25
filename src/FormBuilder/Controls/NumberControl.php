@@ -79,10 +79,10 @@ class NumberControl extends InputControl
         if ($parent !== null)
             return $parent;
 
-        if ($this->getValue() !== null && $this->getValue() < $this->min)
+        if ($this->getValue() !== null && $this->min !== null && $this->getValue() < $this->min)
             return sprintf($this->translate('Please enter a number that is no less than %d.'), $this->min);
 
-        if ($this->getValue() !== null && $this->getValue() > $this->max)
+        if ($this->getValue() !== null && $this->max !== null && $this->getValue() > $this->max)
             return sprintf($this->translate('Please enter a number that is no more than %d.'), $this->max);
 
         return null;
