@@ -88,7 +88,7 @@ class FormSection
 
         $this->controls[$control->getName()] = $control;
 
-        if ($control->getOrder() === 0)
+        if ($control->getOrder() === null)
             $control->setOrder(count($this->controls));
     }
 
