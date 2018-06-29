@@ -136,6 +136,18 @@ class Form
         if (!$this->init)
             throw new \RuntimeException('Form::init() must be called before rendering');
 
+        usort($this->controls, function ($a, $b) {
+            /** @var $a Controls\FormControl */
+            /** @var $b Controls\FormControl */
+            return $a->getOrder() > $b->getOrder();
+        });
+
+        usort($this->sections, function ($a, $b) {
+            /** @var $a FormSection */
+            /** @var $b FormSection */
+            return $a->getOrder() > $b->getOrder();
+        });
+
         printf('<form id="%s" method="%s" class="bsfb-form" data-locale="%s" data-prompt-on-leave="%s">', $this->id, $this->method, Util::getIETFLocale($this->locale), $this->promptOnLeave ? 'true' : 'false');
 
         if ($this->title !== null)
@@ -228,6 +240,9 @@ class Form
         $control->setParentForm($this);
 
         $this->controls[$control->getName()] = $control;
+
+        if ($control->getOrder() === null)
+            $control->setOrder(count($this->controls));
     }
 
     /**
@@ -271,6 +286,9 @@ class Form
         $section->setParent($this);
 
         $this->sections[] = $section;
+
+        if ($section->getOrder() === null)
+            $section->setOrder(count($this->sections));
     }
 
     /**
@@ -428,7 +446,7 @@ class Form
                 'message' => $error->getMessage(),
                 'code' => $error->getCode(),
                 'line' => $error->getLine(),
-                'file' => $error->getFile(),
+                'file' => $error->getile(),
                 'trace' => $error->getTrace()
             ];
         }

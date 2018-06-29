@@ -130,6 +130,7 @@ $section2->addControl($text2);
 $section2->addControl($number);
 
 $section3 = new FormSection('Section III');
+$section3->setOrder(-1);
 
 $radio3 = new RadioButtonControl('Root', 'root');
 $textarea2 = new TextAreaControl('Child 1', 'child1');
