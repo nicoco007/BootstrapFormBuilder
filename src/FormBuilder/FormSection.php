@@ -19,6 +19,8 @@
 namespace FormBuilder;
 
 
+use FormBuilder\Controls\FormControl;
+
 class FormSection
 {
     /** @var Form */
@@ -33,6 +35,9 @@ class FormSection
     /** @var int */
     private $columnCount = 1;
 
+    /** @var int */
+    private $order = null;
+
     /**
      * FormSection constructor.
      * @param string $label
@@ -44,6 +49,12 @@ class FormSection
 
     public function render()
     {
+        usort($this->controls, function ($a, $b) {
+            /** @var $a Controls\FormControl */
+            /** @var $b Controls\FormControl */
+            return $a->getOrder() > $b->getOrder();
+        });
+
         printf('<div class="form-section-title">%s</div>', $this->label);
 
         print('<fieldset>');
@@ -67,7 +78,7 @@ class FormSection
     /**
      * @param Controls\FormControl $control
      */
-    public function addControl($control)
+    public function addControl($control): void
     {
         if (!($control instanceof Controls\FormControl))
             throw new \InvalidArgumentException('Expected $control to be instance of FormControl, got ' . Util::getType($control));
@@ -76,9 +87,12 @@ class FormSection
             throw new \RuntimeException('Control with name ' . array_keys($intersect)[0] . ' was already added.');
 
         $this->controls[$control->getName()] = $control;
+
+        if ($control->getOrder() === null)
+            $control->setOrder(count($this->controls));
     }
 
-    public function getControls($deep = false)
+    public function getControls($deep = false): array
     {
         $controls = $this->controls;
 
@@ -92,7 +106,7 @@ class FormSection
     /**
      * @param Form $parent
      */
-    public function setParent($parent)
+    public function setParent($parent): void
     {
         if (!($parent instanceof Form))
             throw new \InvalidArgumentException('Expected $control to be instance of Form, got ' . Util::getType($parent));
@@ -106,11 +120,24 @@ class FormSection
     /**
      * @param int $columnCount
      */
-    public function setColumnCount($columnCount)
+    public function setColumnCount($columnCount): void
     {
         if ($columnCount < 1 || $columnCount > 4)
             throw new \InvalidArgumentException('$columnCount must be between 1 and 4');
 
         $this->columnCount = $columnCount;
+    }
+
+    public function getOrder(): ?int
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param int $order
+     */
+    public function setOrder(int $order): void
+    {
+        $this->order = $order;
     }
 }

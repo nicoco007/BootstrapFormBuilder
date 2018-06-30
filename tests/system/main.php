@@ -60,6 +60,11 @@ $select2 = new SelectControl('Select with default', 'select2');
 $tel = new PhoneNumberControl('Phone number', 'tel');
 $number = new NumberControl('Number', 'num');
 
+$number->setIcon('dollar-sign');
+$number->setMin(0);
+$number->setMax(100);
+$number->setStep(0.05);
+
 $text_control->setPlaceholder('Enter name');
 $email_control->setPlaceholder('Enter email');
 $password_control->setPlaceholder('Enter password');
@@ -125,6 +130,7 @@ $section2->addControl($text2);
 $section2->addControl($number);
 
 $section3 = new FormSection('Section III');
+$section3->setOrder(-1);
 
 $radio3 = new RadioButtonControl('Root', 'root');
 $textarea2 = new TextAreaControl('Child 1', 'child1');

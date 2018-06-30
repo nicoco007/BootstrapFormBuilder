@@ -59,6 +59,9 @@ abstract class FormControl
     /** @var int */
     private $columnSpan = 1;
 
+    /** @var int */
+    private $order = null;
+
     /**
      * FormControl constructor.
      * @param string $label
@@ -294,6 +297,9 @@ abstract class FormControl
             throw new \RuntimeException('Control with name ' . array_keys($intersect)[0] . ' was already added.');
 
         $this->children[$child->getName()] = $child;
+
+        if ($child->getOrder() === null)
+            $child->setOrder(count($this->children));
     }
 
     /**
@@ -362,6 +368,19 @@ abstract class FormControl
     public function getColumnSpan()
     {
         return $this->columnSpan;
+    }
+
+    public function getOrder(): ?int
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param int $order
+     */
+    public function setOrder(int $order): void
+    {
+        $this->order = $order;
     }
 
     /**
