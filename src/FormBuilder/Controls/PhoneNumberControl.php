@@ -27,7 +27,7 @@ use libphonenumber\PhoneNumberUtil;
 class PhoneNumberControl extends InputControl
 {
     private $initialCountry;
-    private $preferredCountries;
+    private $preferredCountries = [];
 
     function renderContents()
     {
