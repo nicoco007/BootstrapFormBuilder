@@ -446,7 +446,7 @@ class Form
                 'message' => $error->getMessage(),
                 'code' => $error->getCode(),
                 'line' => $error->getLine(),
-                'file' => $error->getile(),
+                'file' => $error->getFile(),
                 'trace' => $error->getTrace()
             ];
         }
