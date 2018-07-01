@@ -35,6 +35,7 @@ use FormBuilder\ErrorResponse;
 use FormBuilder\Form;
 use FormBuilder\FormSection;
 use FormBuilder\RedirectButton;
+use FormBuilder\RedirectResponse;
 use FormBuilder\SubmitButton;
 use FormBuilder\SuccessResponse;
 
@@ -173,12 +174,12 @@ $form->addHiddenValue('hidden', 'garfunkel');
 
 $submit_button = new SubmitButton();
 
-$submit_button->setSubmitCallback(function ($controls) {
+$submit_button->setSubmitCallback(function ($values) {
     /** @var \FormBuilder\Controls\FormControl[] $controls */
-    if ($controls['password']->getValue() === 'dummy')
+    if ($values['password'] === 'dummy')
         return new ErrorResponse('No.');
-    elseif ($controls['name']->getValue() === 'redirectme')
-        return new SuccessResponse('Goodbye', 'arrow-right', 'https://www.google.com');
+    elseif ($values['name'] === 'redirectme')
+        return new RedirectResponse('https://www.google.com');
 
     return new SuccessResponse('You did it!');
 });

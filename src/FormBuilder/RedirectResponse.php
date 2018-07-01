@@ -19,53 +19,21 @@
 namespace FormBuilder;
 
 
-abstract class Response implements \JsonSerializable
+class RedirectResponse extends SuccessResponse
 {
     /** @var string */
-    private $message;
+    private $redirectUrl;
 
-    /** @var string */
-    private $class;
-
-    /** @var string */
-    private $icon;
-
-    /**
-     * Response constructor.
-     * @param string $message
-     * @param string $class
-     * @param string $icon
-     */
-    public function __construct(string $message, string $class, string $icon = 'info-circle')
+    public function __construct(string $redirectUrl = null)
     {
-
-        $this->message = $message;
-        $this->class = $class;
-        $this->icon = $icon;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass()
-    {
-        return $this->class;
+        parent::__construct("", "");
+        $this->redirectUrl = $redirectUrl;
     }
 
     public function jsonSerialize()
     {
         return [
-            'message' => $this->message,
-            'class' => $this->class,
-            'icon' => $this->icon
+            'redirect' => $this->redirectUrl
         ];
     }
 }
