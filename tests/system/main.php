@@ -96,9 +96,9 @@ $radio->addOption('Option 1', 'opt1', ['key' => 'value']);
 $radio->addOption('Option 2', 'opt2', ['otherkey' => 'othervalue']);
 $radio->addOption('Option 3', 'opt3', ['an', 'array']);
 
-$select->addOption('Option 1', 'opt1', ['something' => 'something else']);
-$select->addOption('Option 2', 'opt2', ['something else' => 'something']);
-$select->addOption('Option 3', 'opt3', ['not', 'an', 'associative', 'array']);
+
+for ($i = 0; $i < 100; $i++)
+    $select->addOption('Option ' . ($i + 1), (string) $i);
 
 $radio2->addOption('Option 1', 'opt1', ['key' => 'value']);
 $radio2->addOption('Option 2', 'opt2', ['otherkey' => 'othervalue'], true);
@@ -218,8 +218,8 @@ function parseVal($val)
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css"
-          integrity="sha256-Md8eaeo67OiouuXAi8t/Xpd8t2+IaJezATVTWbZqSOw=" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha18/css/tempusdominus-bootstrap-4.min.css"
           integrity="sha256-9wLOlmGnL51taEbgcXqZQUq0taUCQy3UhwDdNJzsNnk=" crossorigin="anonymous"/>
@@ -264,8 +264,8 @@ function parseVal($val)
         integrity="sha256-L3S3EDEk31HcLA5C6T2ovHvOcD80+fgqaCDt2BAi92o=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/locale/fr-ca.js"
         integrity="sha256-nuG99esmHpjj495vnUBhR7O15dVxTd2cWemlESaRX98=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"
-        integrity="sha256-xaF9RpdtRxzwYMWg4ldJoyPWqyDPCRD0Cv7YEEe6Ie8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha18/js/tempusdominus-bootstrap-4.min.js"
         integrity="sha256-8De73E/55v3s1x7gSEQ4pqpp+YgzggqakxdeXVsIjE0=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.15/js/intlTelInput.min.js"
@@ -274,6 +274,7 @@ function parseVal($val)
         integrity="sha256-+iMZzfetfvKzWUvuUAGnNmowUrc1d11Y+JWx1cHfI8Y=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"
         integrity="sha256-Znf8FdJF85f1LV0JmPOob5qudSrns8pLPZ6qkd/+F0o=" crossorigin="anonymous"></script>
+<script src="dropdown-select.js"></script>
 <script src="../../dist/js/script.min.js"></script>
 <script src="../../dist/js/locale/fr.js"></script>
 </body>

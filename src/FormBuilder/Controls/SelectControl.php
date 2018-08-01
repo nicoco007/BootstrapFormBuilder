@@ -39,8 +39,6 @@ class SelectControl extends MultiOptionControl
             $tag->addAttribute('value', $option->getKey());
             $tag->setInnerText($option->getLabel());
 
-            var_dump([$this->getValue(), $option->getValue()]);
-
             if (($this->getSubmittedKey() === null && $this->getValue() === null && $option->isDefault()) || $this->getValue() === $option->getValue() || $option->getKey() === $this->getSubmittedKey())
                 $tag->addAttribute('selected');
 
