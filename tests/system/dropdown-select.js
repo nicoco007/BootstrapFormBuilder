@@ -26,7 +26,7 @@ jQuery.fn.dropdownSelect = function() {
     var $buttonTextInner = $('<span class="select-text-inner"></span>');
     var $menu = $('<div class="dropdown-menu" aria-labelledby="' + id + '-dropdown">');
 
-    var liveSearch = $input.data('live-search') == true;
+    var liveSearch = $input.data('live-search') === true;
 
     var addOption = function ($option) {
         var $element = $('<button type="button" class="dropdown-item" data-value="' + $option.val() + '">' + $option.text() + '</button>');
