@@ -26,11 +26,9 @@ jQuery.fn.dropdownSelect = function() {
     var $buttonTextInner = $('<span class="select-text-inner"></span>');
     var $menu = $('<div class="dropdown-menu" aria-labelledby="' + id + '-dropdown">');
 
-    $input.css('display', 'none');
-
     $options.each(function () {
         var $option = $(this);
-        var $element = $('<span class="dropdown-item" tabindex="0" data-value="' + $option.val() + '">' + $option.text() + '</span>');
+        var $element = $('<a class="dropdown-item" href="javascript:void(0)" data-value="' + $option.val() + '">' + $option.text() + '</a>');
 
         $element.on('click', function () {
             $input.val($element.data('value'));
@@ -55,5 +53,5 @@ jQuery.fn.dropdownSelect = function() {
     $button.append($buttonText);
     $dropdown.append($button);
     $dropdown.append($menu);
-    $dropdown.after($input);
+    $dropdown.append($input);
 };
