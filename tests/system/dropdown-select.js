@@ -28,7 +28,7 @@ jQuery.fn.dropdownSelect = function() {
 
     $options.each(function () {
         var $option = $(this);
-        var $element = $('<a class="dropdown-item" href="javascript:void(0)" data-value="' + $option.val() + '">' + $option.text() + '</a>');
+        var $element = $('<button type="button" class="dropdown-item" data-value="' + $option.val() + '">' + $option.text() + '</button>');
 
         $element.on('click', function () {
             $input.val($element.data('value'));
