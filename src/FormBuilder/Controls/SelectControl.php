@@ -24,12 +24,21 @@ use FormBuilder\Util;
 
 class SelectControl extends MultiOptionControl
 {
+    private $liveSearch = false;
+
     public function renderControl()
     {
         if (!Util::stringIsNullOrEmpty($this->getLabel()))
             printf('<label>%s</label>', $this->getLabel());
 
-        printf('<select class="%s" name="%s">', $this->getClasses(), $this->getName());
+        $input = new HtmlTag('select', true);
+        $input->addAttribute('class', $this->getClasses());
+        $input->addAttribute('name', $this->getName());
+
+        if ($this->liveSearch)
+            $input->addAttribute('data-live-search', 'true');
+
+        $input->render();
 
         if (!$this->hasDefault())
             printf('<option value="">%s</option>', $this->translate('Select an option&hellip;'));
@@ -46,6 +55,14 @@ class SelectControl extends MultiOptionControl
         }
 
         print('</select>');
+    }
+
+    /**
+     * @param bool $liveSearch
+     */
+    public function setLiveSearch(bool $liveSearch): void
+    {
+        $this->liveSearch = $liveSearch;
     }
 
     public function getType()

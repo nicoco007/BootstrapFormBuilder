@@ -60,9 +60,11 @@ var BootstrapFormBuilder = {
                 }).trigger('change');
             });
 
-            $form.find('select').each(function () {
-                $(this).dropdownSelect();
-            });
+            if (typeof $.fn.dropdownSelect === 'function') {
+                $form.find('select').each(function () {
+                    $(this).dropdownSelect();
+                });
+            }
 
             // initialize date/time pickers - requires Tempus Dominus https://tempusdominus.github.io/bootstrap-4/
             if (typeof $.fn.datetimepicker === 'function') {

@@ -96,6 +96,7 @@ $radio->addOption('Option 1', 'opt1', ['key' => 'value']);
 $radio->addOption('Option 2', 'opt2', ['otherkey' => 'othervalue']);
 $radio->addOption('Option 3', 'opt3', ['an', 'array']);
 
+$select->setLiveSearch(true);
 
 for ($i = 0; $i < 100; $i++)
     $select->addOption('Option ' . ($i + 1), (string) $i);

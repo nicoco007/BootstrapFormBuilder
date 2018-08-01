@@ -26,20 +26,53 @@ jQuery.fn.dropdownSelect = function() {
     var $buttonTextInner = $('<span class="select-text-inner"></span>');
     var $menu = $('<div class="dropdown-menu" aria-labelledby="' + id + '-dropdown">');
 
-    $options.each(function () {
-        var $option = $(this);
+    var liveSearch = $input.data('live-search') == true;
+
+    var addOption = function ($option) {
         var $element = $('<button type="button" class="dropdown-item" data-value="' + $option.val() + '">' + $option.text() + '</button>');
 
         $element.on('click', function () {
-            $input.val($element.data('value'));
-            $buttonTextInner.text($element.text());
+            $input.val($option.val());
+            $buttonTextInner.text($option.text());
             $input.trigger('change');
         });
 
         $menu.append($element);
+    };
+
+    if (liveSearch) {
+        var $searchInput = $('<input type="text" class="form-control"/>');
+        var $searchContainer = $('<div class="search-box"></div>');
+
+        $searchInput.on('input propertychange', function () {
+            $menu.find('.dropdown-item').remove();
+
+            var searchTerms = $searchInput.val().toLocaleLowerCase().trim().split(' ');
+
+            $options.each(function () {
+                var $option = $(this);
+                var text = $option.text().toLocaleLowerCase();
+
+                for (var i = 0; i < searchTerms.length; i++) {
+                    if (searchTerms[i] === '' || text.indexOf(searchTerms[i]) > -1) {
+                        addOption($option);
+                        break;
+                    }
+                }
+            });
+
+            $button.dropdown('update');
+        });
+
+        $searchContainer.append($searchInput);
+        $menu.append($searchContainer);
+    }
+
+    $options.each(function () {
+        addOption($(this));
     });
 
-    var $selectedOption = $options.filter('[value="' + $input.val() + '"]').first();
+    var $selectedOption = $options.filter('[value="' + $input.val() + '"]');
 
     if (!$selectedOption.length)
         $selectedOption = $options.first();
@@ -54,4 +87,13 @@ jQuery.fn.dropdownSelect = function() {
     $dropdown.append($button);
     $dropdown.append($menu);
     $dropdown.append($input);
+
+    $button.dropdown();
+
+    $dropdown.on('shown.bs.dropdown', function () {
+        if (liveSearch && $input.val() === '')
+            $searchInput.focus();
+        else
+            $dropdown.find('.dropdown-item').filter('[data-value="' + $input.val() + '"]').first().focus();
+    });
 };

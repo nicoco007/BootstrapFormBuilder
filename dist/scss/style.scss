@@ -45,6 +45,10 @@
   }
 
   & > .dropdown-menu {
+    & > .search-box {
+      padding: 0 8px 4px 8px;
+    }
+
     width: 100%;
     max-height: 50vh;
     overflow-y: auto;
