@@ -4,14 +4,14 @@
   "description": "A simple form builder for Bootstrap 4",
   "dependencies": {},
   "devDependencies": {
-    "autoprefixer": "^8.5.0",
-    "bootstrap": "^4.1.1",
-    "grunt": "^1.0.2",
+    "autoprefixer": "^8.6.5",
+    "bootstrap": "^4.3.1",
+    "grunt": "^1.0.3",
     "grunt-autoprefixer": "^3.0.4",
-    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-contrib-uglify": "^3.4.0",
     "grunt-sass": "^2.1.0",
-    "node-sass": "^4.9.0",
-    "postcss": "^6.0.22"
+    "node-sass": "^4.11.0",
+    "postcss": "^6.0.23"
   },
   "repository": {
     "type": "git",
