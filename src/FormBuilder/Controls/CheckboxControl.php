@@ -47,7 +47,7 @@ class CheckboxControl extends FormControl
 
         $input_tag->render();
 
-        printf('<label class="custom-control-label" for="%s">%s</label>', $this->getName(), $this->getLabel());
+        printf('<label class="custom-control-label" for="%s"><span class="label-text">%s</span></label>', $this->getName(), $this->getLabel());
 
         print('</div>');
     }

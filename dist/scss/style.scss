@@ -33,7 +33,7 @@
   }
 
   .control-group {
-    .form-group.required label::after {
+    .form-group.required > label::after, .form-group.required .label-text::after {
       content: ' *';
       color: #cc0000;
     }
