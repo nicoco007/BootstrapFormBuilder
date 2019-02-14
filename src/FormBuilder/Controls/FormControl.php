@@ -91,7 +91,12 @@ abstract class FormControl
 
         $tag->render();
 
-        print('<div class="form-group">');
+        $classes = ['form-group'];
+
+        if ($this->required)
+            $classes[] = 'required';
+
+        printf('<div class="%s">', implode(' ', $classes));
 
         if ($this->requiredParentValue) {
             print('<div class="child-message">');
